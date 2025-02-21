@@ -253,7 +253,7 @@ class VoteView(generics.GenericAPIView):
             post.save(update_fields=["points"])
 
         user.coins = F('coins') + settings.VOTE_REWARD
-        user.vote_times = F('vote_times') - 1
+        user.vote_times = max(F('vote_times') - 1, 0)
         user.vote_closed = True
         user.save(update_fields=["coins","vote_times","vote_closed"])
 

@@ -33,6 +33,8 @@ class Challenge(models.Model):
     name = models.CharField(max_length=200, null=True)
     detail = models.TextField(max_length=200, null=True)
     num_posts = models.IntegerField(default=0)
+    #init_time
+    #final_time
 
     ranking = JSONField(default=list, blank=True)
 
