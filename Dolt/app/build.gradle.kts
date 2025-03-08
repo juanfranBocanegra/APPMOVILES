@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
+    id("kotlin-kapt")
 }
 
 android {
@@ -16,6 +17,12 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
+
+    buildFeatures {
+        dataBinding = true
+        viewBinding = true
+    }
+
 
     buildTypes {
         release {
@@ -37,6 +44,11 @@ android {
 
 dependencies {
 
+    // Retrofit
+    implementation(libs.retrofit)
+
+    // Conversor Gson para JSON
+    implementation(libs.converter.gson)
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.material)

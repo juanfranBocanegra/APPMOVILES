@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Dolt-es</string>
+    <string name="answer_button_text">Ver respuesta</string>
+    <string name="answer_text">RESPUESTA</string>
+    <string name="question_text">PREGUNTA</string>
+</resources>
