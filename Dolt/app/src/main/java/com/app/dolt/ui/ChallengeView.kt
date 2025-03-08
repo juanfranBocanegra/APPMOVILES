@@ -1,4 +1,4 @@
-package com.example.app
+package com.app.dolt.ui
 
 import android.content.Context
 import android.util.AttributeSet

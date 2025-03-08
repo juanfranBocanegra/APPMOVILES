@@ -1,15 +1,10 @@
-package com.app.dolt
+package com.app.dolt.ui
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.ViewGroup.LayoutParams.FILL_PARENT
-import android.view.ViewGroup.LayoutParams.MATCH_PARENT
-import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
-import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemChallengeViewBinding
 import com.app.dolt.model.Challenge
-import com.example.app.ChallengeView
 
 class ChallengeAdapter : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
 
