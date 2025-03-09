@@ -31,7 +31,9 @@ class UserFollow(models.Model):
 class Challenge(models.Model):
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     name = models.CharField(max_length=200, null=True)
+    name_es = models.CharField(max_length=200, null=True)
     detail = models.TextField(max_length=200, null=True)
+    detail_es = models.TextField(max_length=200, null=True)
     num_posts = models.IntegerField(default=0)
     #init_time
     #final_time

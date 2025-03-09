@@ -22,7 +22,7 @@ class PostAdmin(admin.ModelAdmin):
 @admin.register(Challenge)
 class ChallengeAdmin(admin.ModelAdmin):
     list_display = ('name', 'detail', 'num_posts')
-    fields = ['name', 'detail', 'num_posts', 'ranking']
+    fields = ['name', 'name_es', 'detail', 'detail_es', 'num_posts', 'ranking']
     
     def ranking(self, instance):
         if instance.ranking:

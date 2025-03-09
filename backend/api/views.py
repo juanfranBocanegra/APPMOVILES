@@ -39,6 +39,8 @@ class LoginView(generics.GenericAPIView):
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
+
+        print(username, password)
         
         user = authenticate(username=username, password=password)
 
@@ -58,8 +60,9 @@ class LogoutView(generics.GenericAPIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh"]
-            print(refresh_token)
+            print("AAAAAAAAAAAAAA",refresh_token)
             token = RefreshToken(refresh_token)
+            print(token)
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
@@ -163,13 +166,9 @@ class ProfileView(generics.GenericAPIView):
 class FeedView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     
-    def get(self, request):
+    def get(self, request, size):
         user = request.user
-        try:
-            size = request.data.get("size")
-            size = int(size)
-        except:
-            return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+        size = int(size)
         following = user.following.select_related('followed').all()
         following_users = [follow.followed for follow in following]
         posts = Post.objects.filter(Q(user__in=following_users)|Q(user=user)).order_by('-date')[:size]
