@@ -1,6 +1,7 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.authentication import BaseAuthentication
 from rest_framework_simplejwt.tokens import RefreshToken
 from .serializers import SignUpSerializer
 from django.contrib.auth import authenticate
@@ -14,6 +15,16 @@ from operator import itemgetter
 
 User = get_user_model()
 
+class NoAuthentication(BaseAuthentication):
+    def authenticate(self, request):
+        return None  # No autentica al usuario
+
+class CheckView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        return Response({}, status=status.HTTP_200_OK)
+
 # Registro de usuarios
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
@@ -23,14 +34,17 @@ class SignUpView(generics.CreateAPIView):
 # Login de usuario con JWT
 class LoginView(generics.GenericAPIView):
     permission_classes = [AllowAny]
+    authentication_classes = [NoAuthentication]
 
     def post(self, request):
         username = request.data.get("username")
         password = request.data.get("password")
+        
         user = authenticate(username=username, password=password)
 
         if user is not None:
             refresh = RefreshToken.for_user(user)
+            print(refresh.access_token)
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
@@ -44,10 +58,12 @@ class LogoutView(generics.GenericAPIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh"]
+            print(refresh_token)
             token = RefreshToken(refresh_token)
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
+            print(e)
             return Response(status=status.HTTP_400_BAD_REQUEST)
 
 class FollowView(generics.GenericAPIView):
@@ -95,9 +111,8 @@ class FollowView(generics.GenericAPIView):
 class ProfileView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request):
+    def get(self, request, username):
         try:
-            username = request.data.get("username")
             user = User.objects.get(username=username)
         except:
             return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
@@ -169,7 +184,7 @@ class ChallengeView(generics.GenericAPIView):
     queryset = Challenge.objects.all()
 
     def get(self, request):
-        print(request.auth)
+        #print(request.auth)
         challenges = Challenge.objects.all()
         challenge_data = ChallengeSerializer(challenges, many=True)
 
