@@ -32,22 +32,29 @@ open class MenuActivity : AppCompatActivity() {
             when (item.itemId) {
                 R.id.navigation_home -> {
                     if (this !is FeedCActivity) {
-                        startActivity(Intent(this, FeedCActivity::class.java))
+                        val intent = Intent(this, FeedCActivity::class.java)
                         val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+                        startActivity(intent, options.toBundle())
                     }
                     true
                 }
                 R.id.navigation_profile -> {
                     if (this !is ProfileActivity) {
-                        startActivity(Intent(this, ProfileActivity::class.java))
+                        val sharedPreferences = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+                        val username = sharedPreferences.getString("USERNAME", null)
+                        val intent = Intent(this, ProfileActivity::class.java)
+                        intent.putExtra("USERNAME", username)
+                        intent.putExtra("MENU", "true")
                         val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+                        startActivity(intent, options.toBundle())
                     }
                     true
                 }
                 R.id.navigation_settings -> {
                     if (this !is FeedCActivity) {
-                        startActivity(Intent(this, FeedCActivity::class.java))
+                        val intent = Intent(this, FeedCActivity::class.java)
                         val options = ActivityOptions.makeCustomAnimation(this, 0, 0)
+                        startActivity(intent, options.toBundle())
                     }
                     true
                 }

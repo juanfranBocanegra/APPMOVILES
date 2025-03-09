@@ -1,6 +1,5 @@
 package com.app.dolt.model
 
-data class LoginResponse(
+data class LogoutRequest(
     val refresh: String,
-    val access: String
 )

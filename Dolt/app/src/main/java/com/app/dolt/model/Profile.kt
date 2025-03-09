@@ -4,7 +4,7 @@ package com.app.dolt.model
     "num_followers": 0,
     "num_followed": 1*/
 
-data class ProfileResponse(
+data class Profile(
     val name : String,
     val username : String,
     val num_followers : Int,
