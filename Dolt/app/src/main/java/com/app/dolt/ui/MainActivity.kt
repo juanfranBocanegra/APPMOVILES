@@ -9,7 +9,10 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.app.dolt.R
 import android.content.SharedPreferences
+import androidx.lifecycle.lifecycleScope
+import com.app.dolt.api.RetrofitClient
 import com.app.dolt.utils.SharedPreferencesManager
+import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -23,17 +26,49 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-        val token = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE).getString("BEARER_TOKEN", null)
+        val token = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE).getString("ACCESS_TOKEN", null)
         val username = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE).getString("USERNAME", null)
 
         if (token == null || username == null) {
 
-            val intent = Intent(this, LoginActivity::class.java)
-            startActivity(intent)
+            navigateToLogin()
         }else{
-            val intent = Intent(this, FeedCActivity::class.java)
-            startActivity(intent)
+
+            checkTokenValidity(token)
         }
+
+        finish()
+    }
+
+    private fun checkTokenValidity(token: String) {
+        lifecycleScope.launch {
+            try {
+                val response = RetrofitClient.apiService.validateToken()
+                if (response.isSuccessful) {
+                    // El token es válido, redirigir a FeedCActivity
+                    navigateToFeedC()
+                } else {
+                    // El token no es válido, redirigir a LoginActivity
+                    navigateToLogin()
+                }
+            } catch (e: Exception) {
+                // Error de red o servidor, redirigir a LoginActivity
+                navigateToLogin()
+            }
+        }
+    }
+
+    private fun navigateToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun navigateToFeedC() {
+        val intent = Intent(this, FeedCActivity::class.java)
+        startActivity(intent)
         finish()
     }
 }
+
+

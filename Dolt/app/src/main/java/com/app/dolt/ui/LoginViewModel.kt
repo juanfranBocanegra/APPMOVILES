@@ -20,11 +20,13 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
 
                 if (response.isSuccessful) {
                     val token = response.body()?.access
-                    token?.let {
-                        saveToken(it)
-                        onSuccess(it)  // Llamar al callback de éxito con el token
+                    val refresh = response.body()?.refresh
+                    if (token != null && refresh != null) {
+                        saveAccessToken(token)
+                        saveRefreshToken(refresh)
+                        onSuccess(token)  // Llamar al callback de éxito con el token
                         saveUsername(username)
-                    } ?: onError("Token no disponible")
+                    } else onError("Token no disponible")
                 } else {
                     onError("Login fallido: ${response.message()}")
                 }
@@ -35,8 +37,13 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
     }
 
     // Guardar el token en SharedPreferences
-    private fun saveToken(token: String) {
-        sharedPreferences.edit().putString("BEARER_TOKEN", token).apply()
+    private fun saveAccessToken(token: String) {
+        sharedPreferences.edit().putString("ACCESS_TOKEN", token).apply()
+
+    }
+
+    private fun saveRefreshToken(token: String) {
+        sharedPreferences.edit().putString("REFRESH_TOKEN", token).apply()
 
     }
 
@@ -49,6 +56,6 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
 
     // Obtener el token guardado
     fun getToken(): String? {
-        return sharedPreferences.getString("BEARER_TOKEN", null)
+        return sharedPreferences.getString("ACCESS_TOKEN", null)
     }
 }
