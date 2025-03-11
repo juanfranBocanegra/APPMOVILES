@@ -57,8 +57,14 @@ class PostSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         # Accede al username del usuario relacionado
         representation['user'] = instance.user.username
+        representation['name_user'] = instance.user.name
+        representation['challenge'] = 'NULL'
+        representation['challenge_es'] = 'NULL'
         if instance.challenge:
             representation['challenge'] = instance.challenge.name
+            representation['challenge_es'] = instance.challenge.name_es
+            
+
         return representation
 
 class ChallengeSerializer(serializers.ModelSerializer):

@@ -1,11 +1,11 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.login
 
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 
 import androidx.databinding.DataBindingUtil
@@ -13,6 +13,7 @@ import androidx.lifecycle.ViewModelProvider
 
 import com.app.dolt.R
 import com.app.dolt.databinding.ActivityLoginBinding
+import com.app.dolt.ui.challenge.FeedCActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -45,6 +46,8 @@ class LoginActivity : AppCompatActivity() {
                         // Guardamos el token en SharedPreferences y mostramos un mensaje
                         Toast.makeText(this, "Login exitoso", Toast.LENGTH_SHORT).show()
                         // Llamamos a MainActivity
+                        Log.i("TOKEN: ", token)
+
                         navigateToMainActivity()
                     },
                     onError = { errorMessage ->

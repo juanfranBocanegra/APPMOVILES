@@ -59,6 +59,7 @@
                     android:layout_weight="1"
                     android:text="Título del Reto"
                     android:textSize="24sp"
+                    android:textColor="@color/black"
                     android:textStyle="bold" />
 
                 <Button
@@ -81,6 +82,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:textColor="@color/black"
                     android:text="Detalles adicionales del reto..."
 
                     android:textSize="16sp" />

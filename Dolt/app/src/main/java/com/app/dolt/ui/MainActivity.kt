@@ -8,10 +8,10 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.app.dolt.R
-import android.content.SharedPreferences
 import androidx.lifecycle.lifecycleScope
 import com.app.dolt.api.RetrofitClient
-import com.app.dolt.utils.SharedPreferencesManager
+import com.app.dolt.ui.challenge.FeedCActivity
+import com.app.dolt.ui.login.LoginActivity
 import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {

@@ -111,18 +111,68 @@ class FollowView(generics.GenericAPIView):
 
         return Response({"followers":followers_serializer.data, "following":following_serializer.data})
 
+
+class UnfollowView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        user = request.user  # Obtiene el usuario autenticado
+        username = request.data.get("username")
+        try:
+            followed = User.objects.get(username=username)
+        except User.DoesNotExist:
+            return Response({"detail": "User not found."}, status=status.HTTP_404_NOT_FOUND)
+        
+        if user == followed:
+            return Response({"detail": "You cannot unfollow yourself."}, status=status.HTTP_400_BAD_REQUEST)
+        
+        # Crear el registro de seguimiento
+        try:
+            follow = UserFollow.objects.filter(follower=user, followed=followed)
+            follow.delete()
+            user.num_followed = F('num_followed') - 1
+            followed.num_followers = F('num_followers') - 1
+            user.save(update_fields=["num_followed"])
+            followed.save(update_fields=["num_followers"])
+        except:
+            return Response({"detail": "Duplicated follow."})
+        return Response({"detail": f"Following {followed.username}"}, status=status.HTTP_201_CREATED)
+
+
+
 class ProfileView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
         try:
+            my_user : User = request.user
             user = User.objects.get(username=username)
         except:
             return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
         
+        followers = user.followers.select_related('follower').all()
+        following = user.following.select_related('followed').all()
+
+        followers_users = [follow.follower for follow in followers]
+        following_users = [follow.followed for follow in following]
+
+        user.num_followers = len(followers_users)
+        user.num_followed = len(following_users)
+        user.save()
+
         user_data = UserProfileSerializer(user)
 
-        return Response(user_data.data)
+        following = UserFollow.objects.filter(Q(follower=my_user)&Q(followed=user))
+        follower = UserFollow.objects.filter(Q(follower=user)&Q(followed=my_user))
+
+        following = len(following) != 0
+        follower = len(follower) != 0
+
+        data = user_data.data
+        data["following"] = following
+        data["follower"] = follower
+
+        return Response(data)
 
     """
     {"update":[{"name":"newname", 
@@ -169,14 +219,20 @@ class FeedView(generics.GenericAPIView):
     def get(self, request, size):
         user = request.user
         size = int(size)
-        following = user.following.select_related('followed').all()
+        following = user.following.select_related('followed').all() 
         following_users = [follow.followed for follow in following]
-        posts = Post.objects.filter(Q(user__in=following_users)|Q(user=user)).order_by('-date')[:size]
+        #posts = Post.objects.filter(Q(user__in=following_users)|Q(user=user)).order_by('-date')
+        posts = Post.objects.all().order_by('-date')
+
+        if size != 0:
+            posts = posts[:size]
 
         
         post_data = PostSerializer(posts, many=True)
 
-        return Response({"feed":post_data.data})
+        #print(post_data.data)
+
+        return Response(post_data.data)
     
 class ChallengeView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
@@ -287,4 +343,46 @@ class VoteView(generics.GenericAPIView):
         user.save(update_fields=["coins","vote_times","vote_closed"])
 
         return Response({"OK"})
+
+
+class SearchView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request, text):
+        user = request.user
+
+        my_users = []
+
+        if text in user.username or text in user.name:
+        
+            my_users.append(user)
+
+        followers = user.followers.select_related('follower').all()
+        following = user.following.select_related('followed').all()
+
+        followers_users = [follow.follower for follow in followers]
+        following_users = [follow.followed for follow in following]
+
+        
+
+
+        for u in followers_users+following_users:
+            if text in user.name or text in user.username:
+                if u not in my_users:
+                    my_users.append(u)
+                
+
+        list_users = User.objects.filter(Q(username__contains=text)|Q(name__contains=text))
+        
+        for u in list_users:
+            if u not in my_users:
+                my_users.append(u)
+        
+        my_users_data = UserSimpleSerializer(my_users, many=True)
+
+
+        
+
+        
+        return Response(my_users_data.data,status=status.HTTP_200_OK)
 

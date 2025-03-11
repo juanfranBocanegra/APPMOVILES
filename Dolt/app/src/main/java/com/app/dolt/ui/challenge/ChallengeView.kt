@@ -1,14 +1,9 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.challenge
 
 import android.content.Context
-import android.util.AttributeSet
 import android.view.LayoutInflater
-import android.view.ViewGroup
 import android.widget.LinearLayout
-import android.widget.TextView
-import androidx.databinding.DataBindingUtil
 import com.app.dolt.R
-import com.app.dolt.databinding.ActivityMainBinding
 import com.app.dolt.databinding.ItemChallengeViewBinding
 
 class ChallengeView(

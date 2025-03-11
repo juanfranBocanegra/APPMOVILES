@@ -1,4 +1,4 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.login
 
 import android.content.SharedPreferences
 import androidx.lifecycle.ViewModel

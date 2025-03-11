@@ -1,14 +1,14 @@
 package com.app.dolt.repository
 
 import com.app.dolt.api.RetrofitClient
-import com.app.dolt.model.Profile
+import com.app.dolt.model.UserProfile
 import retrofit2.HttpException
 import java.io.IOException
 
 class ProfileRepository {
     private val apiService = RetrofitClient.apiService
 
-    suspend fun getProfile(username: String) :Profile? {
+    suspend fun getProfile(username: String) :UserProfile? {
         return try {
             val response = apiService.getProfile(username)
             if (response.isSuccessful) {

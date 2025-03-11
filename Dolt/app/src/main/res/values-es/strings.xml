@@ -1,7 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Dolt-es</string>
-    <string name="answer_button_text">Ver respuesta</string>
-    <string name="answer_text">RESPUESTA</string>
-    <string name="question_text">PREGUNTA</string>
+    <string name="login_username">Usuario</string>
+    <string name="login_password">Contraseña</string>
+    <string name="login_button">INICIAR SESIÓN</string>
+    <string name="menu_challenges">Retos</string>
+    <string name="menu_feed">Feed</string>
+    <string name="menu_profile">Perfil</string>
+    <string name="logout_button">LOGOUT</string>
+    <string name="following_label">Siguiendo: %s</string>
+    <string name="followers_label">Seguidores: %s</string>
+    <string name="follow_label">Seguir</string>
+    <string name="follower_label">Te sigue</string>
+    <string name="unfollow_label">Dejar de seguir</string>
+    <string name="search">Buscar</string>
+    <string name="search_hint">Busca a alguien…</string>
 </resources>

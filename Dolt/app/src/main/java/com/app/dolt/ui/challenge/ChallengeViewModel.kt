@@ -1,4 +1,4 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.challenge
 
 import com.app.dolt.repository.ChallengeRepository
 import androidx.lifecycle.ViewModel
@@ -13,7 +13,7 @@ class ChallengeViewModel : ViewModel() {
     private val repository = ChallengeRepository()
 
     private val _challenges = MutableStateFlow<List<Challenge>>(emptyList())
-    val posts: StateFlow<List<Challenge>> = _challenges
+    val challenges: StateFlow<List<Challenge>> = _challenges
 
     fun loadChallenges() {
         viewModelScope.launch {

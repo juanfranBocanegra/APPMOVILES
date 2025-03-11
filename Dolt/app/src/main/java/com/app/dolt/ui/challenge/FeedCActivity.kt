@@ -1,9 +1,8 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.challenge
 
 import android.os.Bundle
 import android.view.View
 import android.widget.FrameLayout
-import android.widget.Toast
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -12,6 +11,7 @@ import androidx.activity.addCallback
 import androidx.activity.viewModels
 import androidx.lifecycle.lifecycleScope
 import com.app.dolt.R
+import com.app.dolt.ui.MenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 
@@ -31,7 +31,7 @@ class FeedCActivity : MenuActivity() {
         container.addView(binding.root)
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigation.selectedItemId = R.id.navigation_home
+        bottomNavigation.selectedItemId = R.id.navigation_challenges
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -40,13 +40,11 @@ class FeedCActivity : MenuActivity() {
 
         }
 
-        val name = resources.getString(R.string.app_name) + " AAAA"
-        Toast.makeText(this, name, Toast.LENGTH_LONG).show()
 
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
 
         lifecycleScope.launch {
-            viewModel.posts.collect { challenges ->
+            viewModel.challenges.collect { challenges ->
                 if (challenges.isNotEmpty()) {
                     val adapter = ChallengeAdapter()
                     adapter.updateChallenges(challenges)  // Actualiza los datos en el adaptador
@@ -63,8 +61,10 @@ class FeedCActivity : MenuActivity() {
                         onBackPressedDispatcher.addCallback {
                             if (binding.overlay.visibility == View.VISIBLE) {
                                 binding.overlay.visibility = View.GONE
+                            }else{
+
                             }
-                            isEnabled = false
+
                         }
 
                         binding.closeOverlay.setOnClickListener {

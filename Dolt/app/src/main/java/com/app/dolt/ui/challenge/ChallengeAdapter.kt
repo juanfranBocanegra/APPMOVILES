@@ -1,10 +1,12 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.challenge
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemChallengeViewBinding
 import com.app.dolt.model.Challenge
+import java.util.Locale
 
 class ChallengeAdapter : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHolder>() {
 
@@ -23,6 +25,7 @@ class ChallengeAdapter : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHold
 
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun updateChallenges(newChallenges: List<Challenge>) {
         items.clear()
         items.addAll(newChallenges)
@@ -41,9 +44,16 @@ class ChallengeAdapter : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHold
     }
 
     override fun onBindViewHolder(holder: ChallengeViewHolder, position: Int) {
+        val currentLanguage = Locale.getDefault().language
         val challenge = items[position]
-        holder.binding.nameText.text = challenge.name
-        holder.binding.detailText.text = challenge.detail
+        if (currentLanguage == "es") {
+            challenge.name = challenge.name_es
+            challenge.detail = challenge.detail_es
+        }
+
+            holder.binding.nameText.text = challenge.name
+            holder.binding.detailText.text = challenge.detail
+
 
 
         // Configurar el listener para cada elemento
