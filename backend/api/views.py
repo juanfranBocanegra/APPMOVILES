@@ -29,6 +29,7 @@ class CheckView(generics.GenericAPIView):
 class SignUpView(generics.CreateAPIView):
     queryset = User.objects.all()
     permission_classes = [AllowAny]
+    authentication_classes = [NoAuthentication]
     serializer_class = SignUpSerializer
 
 # Login de usuario con JWT
@@ -221,8 +222,8 @@ class FeedView(generics.GenericAPIView):
         size = int(size)
         following = user.following.select_related('followed').all() 
         following_users = [follow.followed for follow in following]
-        #posts = Post.objects.filter(Q(user__in=following_users)|Q(user=user)).order_by('-date')
-        posts = Post.objects.all().order_by('-date')
+        posts = Post.objects.filter(Q(user__in=following_users)|Q(user=user)).order_by('-date')
+        #posts = Post.objects.all().order_by('-date')
 
         if size != 0:
             posts = posts[:size]
@@ -354,7 +355,7 @@ class SearchView(generics.GenericAPIView):
         my_users = []
 
         if text in user.username or text in user.name:
-        
+            
             my_users.append(user)
 
         followers = user.followers.select_related('follower').all()
@@ -367,12 +368,14 @@ class SearchView(generics.GenericAPIView):
 
 
         for u in followers_users+following_users:
-            if text in user.name or text in user.username:
+            if text in u.name or text in u.username:
                 if u not in my_users:
                     my_users.append(u)
                 
 
         list_users = User.objects.filter(Q(username__contains=text)|Q(name__contains=text))
+
+       
         
         for u in list_users:
             if u not in my_users:

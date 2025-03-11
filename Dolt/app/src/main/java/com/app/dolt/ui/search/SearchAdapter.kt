@@ -47,7 +47,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: SearchViewHolder, position: Int) {
-        val currentLanguage = Locale.getDefault().language
+        val size = getItemCount()
         val user = items[position]
 
 

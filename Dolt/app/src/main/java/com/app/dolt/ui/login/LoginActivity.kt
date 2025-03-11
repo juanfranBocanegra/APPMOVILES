@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.app.dolt.R
 import com.app.dolt.databinding.ActivityLoginBinding
 import com.app.dolt.ui.challenge.FeedCActivity
+import com.app.dolt.ui.signup.SignUpActivity
 
 class LoginActivity : AppCompatActivity() {
 
@@ -60,7 +61,14 @@ class LoginActivity : AppCompatActivity() {
                 Toast.makeText(this, "Por favor, ingrese los datos correctamente", Toast.LENGTH_SHORT).show()
             }
         }
+
+        binding.registerLink.setOnClickListener {
+            val intent = Intent(this, SignUpActivity::class.java)
+            startActivity(intent)
+            finish()
+        }
     }
+
 
     // Navegar a la actividad principal
     private fun navigateToMainActivity() {

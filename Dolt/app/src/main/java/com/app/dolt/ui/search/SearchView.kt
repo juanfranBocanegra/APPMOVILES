@@ -1,6 +1,7 @@
 package com.app.dolt.ui.search
 
 import android.content.Context
+import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.app.dolt.R
@@ -17,6 +18,7 @@ class SearchView(
     init {
         LayoutInflater.from(context).inflate(R.layout.item_search_view, this, true)
         binding = ItemSearchViewBinding.inflate(LayoutInflater.from(context), this, true)
+        Log.i("HEIGHT::::::::::::",binding.main.height.toString())
 
         setOnClickListener {
             onClickListener?.invoke()

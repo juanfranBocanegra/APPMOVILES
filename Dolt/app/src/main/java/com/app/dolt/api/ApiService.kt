@@ -8,6 +8,7 @@ import com.app.dolt.model.LoginResponse
 import com.app.dolt.model.LogoutRequest
 import com.app.dolt.model.UserProfile
 import com.app.dolt.model.Post
+import com.app.dolt.model.SignUpRequest
 import com.app.dolt.model.UserSimple
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -17,6 +18,11 @@ import retrofit2.http.POST
 
 
 interface ApiService {
+
+    @POST("signup/")
+    suspend fun signup(
+        @Body signupRequest: SignUpRequest
+    ): Response<Unit>
 
     @POST("login/")
     suspend fun login(

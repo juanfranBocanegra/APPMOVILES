@@ -19,9 +19,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.dolt.R
 import com.app.dolt.api.RetrofitClient
 import com.app.dolt.databinding.ActivitySearchBinding
+import com.app.dolt.ui.MainActivity
 import com.app.dolt.ui.MenuActivity
 import com.app.dolt.ui.ProfileActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.launch
 
 class SearchActivity : MenuActivity() {
@@ -49,7 +51,7 @@ class SearchActivity : MenuActivity() {
             insets
         }
 
-        val ctx = this
+
 
         binding.editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
@@ -63,27 +65,29 @@ class SearchActivity : MenuActivity() {
                 // Programa un nuevo Runnable después del retraso
                 workRunnable = Runnable {
 
-                    binding.recyclerView.layoutManager = LinearLayoutManager(ctx)
 
                     if (s.toString().isNotEmpty()) {
 
                         lifecycleScope.launch {
                             try {
-                                val adapter = SearchAdapter()
+
+                                val searchAdapter = SearchAdapter()
+                                binding.recyclerView.adapter = searchAdapter
+                                binding.recyclerView.layoutManager = LinearLayoutManager(baseContext)
 
                                 val response = RetrofitClient.apiService.search(s.toString())
                                 Log.i("AA:", "AAAAAAAAA: $response")
-                                adapter.updateSearch(response)
-                                binding.recyclerView.adapter = adapter
+                                searchAdapter.updateSearch(response)
 
-                                adapter.setOnItemClickListener { position ->
+
+                                searchAdapter.setOnItemClickListener { position ->
                                     val user = response[position]
                                     val sharedPreferences =
                                         getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
                                     val myUsername = sharedPreferences.getString("USERNAME", null)
 
 
-                                    val intent = Intent(ctx, ProfileActivity::class.java)
+                                    val intent = Intent(baseContext, ProfileActivity::class.java)
                                     intent.putExtra("USERNAME", user.username)
                                     if (myUsername == user.username) {
                                         intent.putExtra("MYSELF", "true")
@@ -92,13 +96,14 @@ class SearchActivity : MenuActivity() {
                                     }
 
 
-                                    val options = ActivityOptions.makeCustomAnimation(ctx, 0, 0)
+                                    val options = ActivityOptions.makeCustomAnimation(baseContext, 0, 0)
                                     startActivity(intent, options.toBundle())
                                 }
 
 
                             } catch (e: Exception) {
-                                Toast.makeText(ctx, "ERROR", Toast.LENGTH_SHORT).show()
+                                Log.e("SEARCH: ", e.toString())
+                                Toast.makeText(baseContext, "ERROR", Toast.LENGTH_SHORT).show()
                             }
 
                         }
