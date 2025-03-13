@@ -103,7 +103,7 @@ class SearchActivity : MenuActivity() {
 
                             } catch (e: Exception) {
                                 Log.e("SEARCH: ", e.toString())
-                                Toast.makeText(baseContext, "ERROR", Toast.LENGTH_SHORT).show()
+                                //Toast.makeText(baseContext, "ERROR", Toast.LENGTH_SHORT).show()
                             }
 
                         }

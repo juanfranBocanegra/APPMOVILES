@@ -12,6 +12,7 @@
 
         <TextView
             android:id="@+id/nameText"
+            android:background="@color/purple_500"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -20,6 +21,7 @@
 
         <TextView
             android:id="@+id/detailText"
+            android:background="@color/purple_500"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
