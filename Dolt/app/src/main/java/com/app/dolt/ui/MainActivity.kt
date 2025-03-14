@@ -3,6 +3,7 @@ package com.app.dolt.ui
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -37,13 +38,14 @@ class MainActivity : AppCompatActivity() {
             checkTokenValidity(token)
         }
 
-        finish()
+
     }
 
     private fun checkTokenValidity(token: String) {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.validateToken()
+                Log.i("LOGIN: ", "AAAAAAAAAA: $response")
                 if (response.isSuccessful) {
                     // El token es válido, redirigir a FeedCActivity
                     navigateToFeedC()
@@ -52,6 +54,7 @@ class MainActivity : AppCompatActivity() {
                     navigateToLogin()
                 }
             } catch (e: Exception) {
+                Log.i("","BBBBBBBBBBBBBBBBB: $e")
                 // Error de red o servidor, redirigir a LoginActivity
                 navigateToLogin()
             }

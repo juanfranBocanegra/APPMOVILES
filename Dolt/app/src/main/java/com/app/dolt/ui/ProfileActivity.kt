@@ -121,6 +121,18 @@ class ProfileActivity : MenuActivity() {
             }
         }
 
+        binding.profileFollowers.setOnClickListener {
+            lifecycleScope.launch {
+                RetrofitClient.apiService.getFollow()
+            }
+        }
+
+        binding.profileFollowing.setOnClickListener {
+            lifecycleScope.launch {
+
+            }
+        }
+
         binding.logoutButton.setOnClickListener {
             val sharedPreferences = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
             val editor = sharedPreferences.edit()
