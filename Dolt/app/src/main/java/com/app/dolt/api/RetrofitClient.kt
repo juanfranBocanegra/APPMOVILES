@@ -17,9 +17,9 @@ import java.io.IOException
 object RetrofitClient {
     //private const val URL = "http://192.168.1.100:8000/api/"
     private const val HTTP = "http://"
-    private var HOST = BuildConfig.HOST
-    private var HOST_EMU = "10.0.2.2"
-    private const val PORT = ":8000"
+    private var HOST = "85.50.17.80"
+    private const val HOST_EMU = "10.0.2.2"
+    private const val PORT = ":80"
     private const val ENDPOINT = "/api/"
     private lateinit var URL : String
 
@@ -27,11 +27,15 @@ object RetrofitClient {
 
     init {
 
-        URL = if (isHostReachable(HOST)){
+        /*URL = if (isHostReachable(HOST)){
             HTTP + HOST + PORT + ENDPOINT
         } else{
             HTTP + HOST_EMU + PORT + ENDPOINT
-        }
+        }*/
+
+        URL = HTTP + HOST + PORT + ENDPOINT
+
+        Log.i("INFO",URL)
 
     }
 

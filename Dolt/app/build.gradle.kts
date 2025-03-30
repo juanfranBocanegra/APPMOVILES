@@ -41,7 +41,7 @@ android {
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
-            val command = "sh -c \"ip -4 addr show wlo1 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'\""
+            /*val command = "sh -c \"ip -4 addr show wlo1 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'\""
 
             val host = try {
                 ProcessBuilder("/bin/sh", "-c", command) // Ejecutar en una shell
@@ -53,10 +53,10 @@ android {
                 null
             } ?: "arch-hp" // Si falla, usa un host por defecto
 
-            buildConfigField("String", "HOST", "\"$host\"")
+            buildConfigField("String", "HOST", "\"$host\"")*/
         }
         debug{
-            val command = "sh -c \"ip -4 addr show wlo1 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'\""
+            /*val command = "sh -c \"ip -4 addr show wlo1 | grep -oP '(?<=inet\\s)\\d+(\\.\\d+){3}'\""
 
             val host = try {
                 ProcessBuilder("/bin/sh", "-c", command) // Ejecutar en una shell
@@ -68,7 +68,7 @@ android {
                 null
             } ?: "arch-hp" // Si falla, usa un host por defecto
 
-            buildConfigField("String", "HOST", "\"$host\"")
+            buildConfigField("String", "HOST", "\"$host\"")*/
         }
     }
     compileOptions {
