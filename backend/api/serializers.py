@@ -10,13 +10,13 @@ class UserSimpleSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = User
-        fields = ["name","username"]
+        fields = ["name","username","profile_image"]
 
 class UserProfileSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ["name", "username", "num_followers", "num_followed"]
+        fields = ["name", "username","profile_image", "num_followers", "num_followed"]
 
 class SignUpSerializer(serializers.ModelSerializer):
     

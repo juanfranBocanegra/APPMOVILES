@@ -41,13 +41,13 @@ class LoginView(generics.GenericAPIView):
         username = request.data.get("username")
         password = request.data.get("password")
 
-        print(username, password)
+        print("LOGIN")
         
         user = authenticate(username=username, password=password)
 
         if user is not None:
             refresh = RefreshToken.for_user(user)
-            print(refresh.access_token)
+            #print(refresh.access_token)
             return Response({
                 "refresh": str(refresh),
                 "access": str(refresh.access_token),
@@ -61,9 +61,9 @@ class LogoutView(generics.GenericAPIView):
     def post(self, request):
         try:
             refresh_token = request.data["refresh"]
-            print("AAAAAAAAAAAAAA",refresh_token)
+            #print("AAAAAAAAAAAAAA",refresh_token)
             token = RefreshToken(refresh_token)
-            print(token)
+            print("LOGOUT")
             token.blacklist()
             return Response(status=status.HTTP_205_RESET_CONTENT)
         except Exception as e:
@@ -172,6 +172,8 @@ class ProfileView(generics.GenericAPIView):
         data = user_data.data
         data["following"] = following
         data["follower"] = follower
+
+        print(data)
 
         return Response(data)
 

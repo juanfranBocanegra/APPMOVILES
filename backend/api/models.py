@@ -10,6 +10,7 @@ from backend import settings
 
 class User(AbstractUser):  # Extiende el modelo User
     name = models.CharField(max_length=200)
+    profile_image = models.ImageField(upload_to='profile_images/', default='profile_images/default.png')
     num_followers = models.IntegerField(default=0)
     num_followed = models.IntegerField(default=0)
     coins = models.IntegerField(default=0)
