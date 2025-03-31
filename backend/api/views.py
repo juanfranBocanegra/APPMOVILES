@@ -15,6 +15,11 @@ from operator import itemgetter
 
 User = get_user_model()
 
+def get_resource_uri(request, res):
+    url = str(request.build_absolute_uri())
+    split = url.split('/')
+    return split[0] + "//" + split[2] + res
+
 class NoAuthentication(BaseAuthentication):
     def authenticate(self, request):
         return None  # No autentica al usuario
@@ -145,6 +150,7 @@ class ProfileView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, username):
+       
         try:
             my_user : User = request.user
             user = User.objects.get(username=username)
@@ -161,6 +167,8 @@ class ProfileView(generics.GenericAPIView):
         user.num_followed = len(following_users)
         user.save()
 
+        print("AQUI")
+
         user_data = UserProfileSerializer(user)
 
         following = UserFollow.objects.filter(Q(follower=my_user)&Q(followed=user))
@@ -173,13 +181,13 @@ class ProfileView(generics.GenericAPIView):
         data["following"] = following
         data["follower"] = follower
 
-        print(data)
+        #data["profile_image"] = get_resource_uri(request,data["profile_image"])
 
         return Response(data)
 
     """
     {"update":[{"name":"newname", 
-                "picture":"newpicture", 
+                "profile_image":"newpicture", 
                 "password":["old_password","new_password1","new_password2"]}]
     }
     
@@ -187,16 +195,26 @@ class ProfileView(generics.GenericAPIView):
     
     def post(self, request):
         user = request.user
+        flag = 0
 
-        update = request.data.get("update")[0]
+        if "profile_image" in request.FILES:
+                if user.profile_image and not user.profile_image.name.endswith("default.png"):
+                    user.profile_image.delete(save=False)  
+                user.profile_image = request.FILES["profile_image"]
+                user.save(update_fields=["profile_image"])
+                flag = 1
+
+        update = request.data.get("update")
+     
 
         
         try:
             if "name" in update.keys():
                 user.name = update["name"]
                 user.save(update_fields=["name"])
-            if "picture" in update.keys():
-                pass
+                flag = 1
+            
+
             if "password" in update.keys():
                 old_password = update["password"][0]
                 check = authenticate(username=user.username, password=old_password)
@@ -207,13 +225,17 @@ class ProfileView(generics.GenericAPIView):
 
                 user.set_password(update["password"][1])
                 user.save()
-        except:
-            return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
+                flag = 1
+        except Exception as e:
+            print(e)
+            if flag == 0:
+                return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
-        user_data = UserProfileSerializer(user)
+        data = UserProfileSerializer(user).data
         
+        #data["profile_image"] = get_resource_uri(request,data["profile_image"])
 
-        return Response(user_data.data)
+        return Response(data)
 
 
 class FeedView(generics.GenericAPIView):
@@ -243,10 +265,18 @@ class ChallengeView(generics.GenericAPIView):
 
     def get(self, request):
         #print(request.auth)
+        user = request.user
         challenges = Challenge.objects.all()
-        challenge_data = ChallengeSerializer(challenges, many=True)
+        all_data = []
+        for challenge in challenges:
+            post = Post.objects.filter(user=user, challenge=challenge)
+            challenge_data = ChallengeSerializer(challenge).data
+            challenge_data['available'] = len(post) == 0
+            all_data.append(challenge_data)
 
-        return Response(challenge_data.data)
+        
+        return Response(all_data)
+
 
 class PostView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
@@ -384,9 +414,6 @@ class SearchView(generics.GenericAPIView):
                 my_users.append(u)
         
         my_users_data = UserSimpleSerializer(my_users, many=True)
-
-
-        
 
         
         return Response(my_users_data.data,status=status.HTTP_200_OK)

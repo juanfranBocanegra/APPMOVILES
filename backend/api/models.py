@@ -30,12 +30,25 @@ class UserFollow(models.Model):
         unique_together = ('follower', 'followed')
 
 class Challenge(models.Model):
+    TYPE_T = 'T'
+    TYPE_I = 'I'
+
+    TYPE_CHOICES = [
+        (TYPE_T, 'Text Type'),
+        (TYPE_I, 'Image Type'),
+    ]
+
     id = models.UUIDField(default=uuid.uuid4, editable=False, unique=True, primary_key=True)
     name = models.CharField(max_length=200, null=True)
     name_es = models.CharField(max_length=200, null=True)
     detail = models.TextField(max_length=200, null=True)
     detail_es = models.TextField(max_length=200, null=True)
     num_posts = models.IntegerField(default=0)
+    challenge_type = models.CharField(
+        max_length=1,
+        choices=TYPE_CHOICES,
+        default=TYPE_T,
+    )
     #init_time
     #final_time
 

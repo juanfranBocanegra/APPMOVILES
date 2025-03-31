@@ -58,6 +58,10 @@ class PostSerializer(serializers.ModelSerializer):
         # Accede al username del usuario relacionado
         representation['user'] = instance.user.username
         representation['name_user'] = instance.user.name
+        
+        #Linea que causa el problema
+        representation['profile_image'] = instance.user.profile_image.url
+        
         representation['challenge'] = 'NULL'
         representation['challenge_es'] = 'NULL'
         if instance.challenge:
@@ -70,4 +74,4 @@ class PostSerializer(serializers.ModelSerializer):
 class ChallengeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Challenge
-        fields = ['id', 'name', 'name_es', 'detail', 'detail_es']
+        fields = ['id', 'name','challenge_type', 'name_es', 'detail', 'detail_es']
