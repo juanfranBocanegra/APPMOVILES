@@ -1,3 +1,4 @@
+from typing import OrderedDict
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
@@ -11,7 +12,7 @@ from .serializers import UserSimpleSerializer, UserProfileSerializer, PostSerial
 from django.db.models import F, Q
 from backend import settings
 import random
-from operator import itemgetter
+from .api_root import ApiRootView
 
 User = get_user_model()
 
@@ -23,6 +24,7 @@ def get_resource_uri(request, res):
 class NoAuthentication(BaseAuthentication):
     def authenticate(self, request):
         return None  # No autentica al usuario
+
 
 class CheckView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
@@ -414,6 +416,8 @@ class SearchView(generics.GenericAPIView):
                 my_users.append(u)
         
         my_users_data = UserSimpleSerializer(my_users, many=True)
+
+        print(my_users_data.data)
 
         
         return Response(my_users_data.data,status=status.HTTP_200_OK)
