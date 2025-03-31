@@ -8,6 +8,7 @@ import com.app.dolt.model.LoginResponse
 import com.app.dolt.model.LogoutRequest
 import com.app.dolt.model.UserProfile
 import com.app.dolt.model.Post
+import com.app.dolt.model.PostRequest
 import com.app.dolt.model.SignUpRequest
 import com.app.dolt.model.UserSimple
 import retrofit2.http.GET
@@ -61,6 +62,11 @@ interface ApiService {
 
     @GET("search/{text}")
     suspend fun search(@Path("text") text: String): List<UserSimple>
+
+    @POST("post/")
+    suspend fun post(
+        @Body postRequest: PostRequest
+    ): Response<Unit>
 
     //@GET("posts/{id}")
     //suspend fun getPostById(@Path("id") id: Int): Challenge

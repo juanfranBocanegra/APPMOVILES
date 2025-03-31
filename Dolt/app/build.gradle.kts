@@ -1,7 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.android) version "2.0.21"
     id("kotlin-kapt")
+
 }
 
 android {
@@ -82,10 +83,20 @@ android {
 
 dependencies {
 
+    implementation(libs.timber)
+
     implementation (libs.androidx.navigation.fragment.ktx)
     implementation (libs.androidx.navigation.ui.ktx)
 
     implementation(libs.androidx.lifecycle.viewmodel.ktx)
+
+    implementation(libs.glide)
+    annotationProcessor(libs.compiler)
+
+    // También necesitas estas dependencias si usas Kotlin:
+    implementation(libs.okhttp3.integration)
+    implementation(libs.annotations)
+    kapt("com.github.bumptech.glide:compiler:4.16.0")
 
     // Retrofit
     implementation(libs.retrofit)

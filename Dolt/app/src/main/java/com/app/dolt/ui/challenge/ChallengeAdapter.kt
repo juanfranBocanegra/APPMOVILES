@@ -32,6 +32,8 @@ class ChallengeAdapter : RecyclerView.Adapter<ChallengeAdapter.ChallengeViewHold
         notifyDataSetChanged() // Notifica al RecyclerView que los datos han cambiado
     }
 
+
+
     class ChallengeViewHolder(val binding: ItemChallengeViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChallengeViewHolder {

@@ -22,4 +22,7 @@
     <string name="registerButton">Registrate</string>
     <string name="loginText">¿Ya tienes una cuenta?. </string>
     <string name="loginLink">Inicia sesión aquí</string>
+    <string name="post_hint">Escribe aquí…</string>
+    <string name="post_button">Publicar</string>
+    <string name="edit_profile_label">Edit profile</string>
 </resources>

@@ -13,7 +13,7 @@ import androidx.lifecycle.lifecycleScope
 import com.app.dolt.R
 import com.app.dolt.databinding.ActivityFeedPBinding
 import com.app.dolt.ui.MenuActivity
-import com.app.dolt.ui.ProfileActivity
+import com.app.dolt.ui.profile.ProfileActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 

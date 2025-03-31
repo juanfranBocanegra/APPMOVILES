@@ -21,6 +21,12 @@
     <string name="registerButton">Sign up</string>
     <string name="loginText">Already have an account?. </string>
     <string name="loginLink">Log in here</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="post_hint">Write here…</string>
+    <string name="post_button">Post</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="edit_profile_label">Edit profile</string>
 
 
 </resources>

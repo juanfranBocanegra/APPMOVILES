@@ -9,6 +9,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemSearchViewBinding
 import com.app.dolt.model.UserSimple
+import com.bumptech.glide.Glide
 import java.util.Locale
 
 class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
@@ -50,6 +51,19 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
         val size = getItemCount()
         val user = items[position]
 
+            holder.binding.profileImage.apply {
+                post { // Espera a que el view tenga dimensiones
+                val size = width // Usamos el ancho como base
+                layoutParams.height = size
+                requestLayout()
+
+                Glide.with(context)
+                    .load(user.getProfileImageUrl())
+                    .override(size, size)
+                    .centerCrop()
+                    .into(this)
+                }
+            }
 
             holder.binding.name.text = user.name
             val spannableString = SpannableString("@"+user.username)

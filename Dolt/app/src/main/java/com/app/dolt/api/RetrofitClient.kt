@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import android.util.Log
 import com.app.dolt.BuildConfig
+import okhttp3.Cache
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
+import java.io.File
 import java.io.IOException
 
 
@@ -22,6 +25,9 @@ object RetrofitClient {
     private const val PORT = ":80"
     private const val ENDPOINT = "/api/"
     private lateinit var URL : String
+    lateinit var DOMAIN : String
+    private const val CACHE_SIZE = 10 * 1024 * 1024 // 10 MB
+    private const val MAX_AGE = 60 // 1 minuto (en producción usa valores mayores)
 
     private lateinit var sharedPreferences: SharedPreferences
 
@@ -32,11 +38,15 @@ object RetrofitClient {
         } else{
             HTTP + HOST_EMU + PORT + ENDPOINT
         }*/
+        DOMAIN = HTTP + HOST + PORT
+        URL = DOMAIN + ENDPOINT
 
-        URL = HTTP + HOST + PORT + ENDPOINT
+        Timber.i(URL)
 
-        Log.i("INFO",URL)
+    }
 
+    private fun createCache(context: Context): Cache {
+        return Cache(File(context.cacheDir, "http_cache"), CACHE_SIZE.toLong())
     }
 
     fun initialize(context: Context) {

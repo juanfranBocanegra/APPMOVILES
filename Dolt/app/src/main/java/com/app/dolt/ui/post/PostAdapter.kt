@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemPostViewBinding
 import com.app.dolt.model.Post
+import com.bumptech.glide.Glide
 import java.util.Locale
 
 class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
@@ -53,17 +54,33 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
                 post.challenge = post.challenge_es
 
         }
+        holder.binding.profileImage.apply {
+            post { // Espera a que el view tenga dimensiones
+                val size = width // Usamos el ancho como base
+                layoutParams.height = size
+                requestLayout()
 
-            holder.binding.postUserName.text = post.name_user
-            val spannableString = SpannableString("@"+post.user)
-            spannableString.setSpan(UnderlineSpan(), 0, post.user.length+1, 0)
-            holder.binding.postUser.text = spannableString
-            holder.binding.PostText.text = post.text
-            holder.binding.PostChallenge.text = post.challenge
-            holder.binding.PostDate.text = post.date
+                Glide.with(context)
+                    .load(post.getProfileImageUrl())
+                    .override(size, size)
+                    .centerCrop()
+                    .into(this)
+            }
+        }
+
+        holder.binding.postUserName.text = post.name_user
+        val spannableString = SpannableString("@"+post.user)
+        spannableString.setSpan(UnderlineSpan(), 0, post.user.length+1, 0)
+        holder.binding.postUser.text = spannableString
+        holder.binding.PostText.text = post.text
+        holder.binding.PostChallenge.text = post.challenge
+        holder.binding.PostDate.text = post.date
 
 
 
+        holder.binding.profileImage.setOnClickListener {
+            onItemClickListener?.invoke(position)
+        }
 
         holder.binding.postUser.setOnClickListener {
             onItemClickListener?.invoke(position)
@@ -72,6 +89,7 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
         holder.binding.postUserName.setOnClickListener {
             onItemClickListener?.invoke(position)
         }
+
     }
 
     override fun getItemCount() = items.size

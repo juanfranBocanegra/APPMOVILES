@@ -21,7 +21,7 @@ import com.app.dolt.api.RetrofitClient
 import com.app.dolt.databinding.ActivitySearchBinding
 import com.app.dolt.ui.MainActivity
 import com.app.dolt.ui.MenuActivity
-import com.app.dolt.ui.ProfileActivity
+import com.app.dolt.ui.profile.ProfileActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.launch

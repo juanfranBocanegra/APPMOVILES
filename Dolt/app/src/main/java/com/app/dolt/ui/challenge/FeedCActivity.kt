@@ -1,6 +1,7 @@
 package com.app.dolt.ui.challenge
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import androidx.core.view.ViewCompat
@@ -14,6 +15,7 @@ import com.app.dolt.R
 import com.app.dolt.ui.MenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import androidx.core.view.isVisible
 
 
 class FeedCActivity : MenuActivity() {
@@ -53,23 +55,8 @@ class FeedCActivity : MenuActivity() {
                     // Establecer el listener para cada elemento después de que se haya actualizado la lista
                     adapter.setOnItemClickListener { position ->
                         val challenge = challenges[position]  // Usar el valor de challenges (de la API)
-                        binding.nameTextOverlay.text = challenge.name
-                        binding.detailTextOverlay.text = challenge.detail
-                        binding.overlay.visibility = View.VISIBLE
+                        showChallengeDetail(challenge.name, challenge.detail, challenge.id, challenge.available.toString())
 
-                        // Lógica para cerrar el overlay con el botón de "Atrás"
-                        onBackPressedDispatcher.addCallback {
-                            if (binding.overlay.visibility == View.VISIBLE) {
-                                binding.overlay.visibility = View.GONE
-                            }else{
-
-                            }
-
-                        }
-
-                        binding.closeOverlay.setOnClickListener {
-                            binding.overlay.visibility = View.GONE
-                        }
                     }
                 }
             }
@@ -80,5 +67,16 @@ class FeedCActivity : MenuActivity() {
 
     }
 
+    private fun showChallengeDetail(name: String, detail: String, id: String, available: String) {
+        val fragment = ChallengeDetailFragment.newInstance(name, detail, id, available)
+
+        // Asegúrate de usar el FragmentManager correcto
+        supportFragmentManager.let {
+            fragment.show(it, "ChallengeDetailFragment")
+        }
+
+        // Opcional: añade un log para verificar que se llama al método
+        Log.d("ChallengeDetail", "Showing dialog for: $name")
+    }
 
 }

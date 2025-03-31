@@ -45,7 +45,7 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.validateToken()
-                Log.i("LOGIN: ", "AAAAAAAAAA: $response")
+
                 if (response.isSuccessful) {
                     // El token es válido, redirigir a FeedCActivity
                     navigateToFeedC()
@@ -54,7 +54,7 @@ class MainActivity : AppCompatActivity() {
                     navigateToLogin()
                 }
             } catch (e: Exception) {
-                Log.i("","BBBBBBBBBBBBBBBBB: $e")
+
                 // Error de red o servidor, redirigir a LoginActivity
                 navigateToLogin()
             }

@@ -12,6 +12,7 @@ import com.app.dolt.R
 import com.app.dolt.databinding.ActivityMenuBinding
 import com.app.dolt.ui.challenge.FeedCActivity
 import com.app.dolt.ui.post.FeedPActivity
+import com.app.dolt.ui.profile.ProfileActivity
 import com.app.dolt.ui.search.SearchActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 

@@ -1,6 +1,6 @@
-package com.app.dolt.ui
+package com.app.dolt.ui.profile
 
-import android.content.Context
+import ProfileEditFragment
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -18,9 +18,12 @@ import com.app.dolt.model.FollowRequest
 import com.app.dolt.model.LogoutRequest
 import com.app.dolt.model.UserProfile
 import com.app.dolt.repository.ProfileRepository
+import com.app.dolt.ui.MenuActivity
 import com.app.dolt.ui.login.LoginActivity
+import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 class ProfileActivity : MenuActivity() {
     private lateinit var binding: ActivityProfileBinding
@@ -33,7 +36,21 @@ class ProfileActivity : MenuActivity() {
             try {
                 val userProfile: UserProfile? = repository.getProfile(username)
                 if (userProfile != null) {
-                    Log.i("PROFILE:", userProfile.name + " " + userProfile.username)
+                    Timber.i(userProfile.name + " " + userProfile.username + " " + userProfile.profile_image)
+
+                    binding.profileImage.apply{
+                        post { // Espera a que el view tenga dimensiones
+                            val size = width // Usamos el ancho como base
+                            layoutParams.height = size
+                            requestLayout()
+
+                            Glide.with(context)
+                                .load(userProfile.getProfileImageUrl())
+                                .override(size, size)
+                                .centerCrop()
+                                .into(this)
+                        }
+                    }
                     binding.profileName.text = userProfile.name
                     binding.profileUsername.text = "@" + userProfile.username
                     binding.profileFollowing.text =
@@ -83,6 +100,7 @@ class ProfileActivity : MenuActivity() {
             val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
             bottomNavigation.selectedItemId = R.id.navigation_profile
             binding.logoutButton.visibility = View.VISIBLE
+            binding.editButton.visibility = View.VISIBLE
             binding.followButton.visibility = View.GONE
         }
 
@@ -129,12 +147,12 @@ class ProfileActivity : MenuActivity() {
 
         binding.profileFollowing.setOnClickListener {
             lifecycleScope.launch {
-
+                
             }
         }
 
         binding.logoutButton.setOnClickListener {
-            val sharedPreferences = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+            val sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
             val editor = sharedPreferences.edit()
             val refresh = sharedPreferences.getString("REFRESH_TOKEN", null)
             if (refresh != null) {
@@ -147,6 +165,14 @@ class ProfileActivity : MenuActivity() {
                         apply()
                     }
                 }
+            }
+
+            binding.editButton.setOnClickListener {
+                val fragment = ProfileEditFragment()
+                supportFragmentManager.beginTransaction()
+                    .replace(R.id.container, fragment)
+                    .addToBackStack(null)
+                    .commit()
             }
 
 
