@@ -6,6 +6,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.content.Context
 import android.content.Intent
+import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.view.menu.MenuItemImpl
 import androidx.databinding.DataBindingUtil
 import com.app.dolt.R
@@ -25,7 +26,7 @@ open class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-
+        //enableEdgeToEdge()
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
 

@@ -57,6 +57,7 @@
                     android:visibility="gone"
                     tools:visibility="visible"
                     android:layout_width="match_parent"
+
                     android:layout_height="100dp"
                     android:gravity="start"
                     app:layout_constraintDimensionRatio="H,1:1"

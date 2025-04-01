@@ -13,6 +13,8 @@ object SharedPreferencesManager {
         return context.getSharedPreferences(PREFS_NAME, Context.MODE_PRIVATE)
     }
 
+
+
     // Guardar el token
     fun saveToken(context: Context, token: String) {
         val editor = getPreferences(context).edit()

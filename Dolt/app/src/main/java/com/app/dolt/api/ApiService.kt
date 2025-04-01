@@ -9,6 +9,7 @@ import com.app.dolt.model.LogoutRequest
 import com.app.dolt.model.UserProfile
 import com.app.dolt.model.Post
 import com.app.dolt.model.PostRequest
+import com.app.dolt.model.ProfileRequest
 import com.app.dolt.model.SignUpRequest
 import com.app.dolt.model.UserSimple
 import retrofit2.http.GET
@@ -43,6 +44,11 @@ interface ApiService {
 
     @GET("profile/{username}")
     suspend fun getProfile(@Path("username") username: String): Response<UserProfile>
+
+    @POST("profile/")
+    suspend fun updateProfile(
+        @Body profileRequest: ProfileRequest
+    ): Response<Unit>
 
     @GET("feed/{size}")
     suspend fun getFeed(@Path("size") size: Int): List<Post>

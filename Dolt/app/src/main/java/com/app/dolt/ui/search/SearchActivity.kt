@@ -34,7 +34,7 @@ class SearchActivity : MenuActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
 
         binding = ActivitySearchBinding.inflate((layoutInflater))
 

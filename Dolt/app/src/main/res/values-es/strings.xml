@@ -24,5 +24,11 @@
     <string name="loginLink">Inicia sesión aquí</string>
     <string name="post_hint">Escribe aquí…</string>
     <string name="post_button">Publicar</string>
-    <string name="edit_profile_label">Edit profile</string>
+    <string name="edit_profile_label">Editar perfil</string>
+    <string name="hint_current_password">Introduce la contraseña actual…</string>
+    <string name="hint_edit_password1">Introduce la nueva contraseña…</string>
+    <string name="hint_edit_password2">Repite la nueva contraseña…</string>
+    <string name="edit_name_label">Nombre:</string>
+    <string name="edit_password_label">Contraseña:</string>
+    <string name="change_image">Cambiar foto</string>
 </resources>

@@ -8,9 +8,9 @@ import com.app.dolt.api.RetrofitClient
     "num_followed": 1*/
 
 data class UserProfile(
-    val name : String = "NULL",
+    var name : String = "NULL",
     val username : String = "NULL",
-    val profile_image : String = "NULL",
+    var profile_image : String = "NULL",
     val num_followers : Int = 0,
     val num_followed : Int = 0,
     val following: Boolean = false,
