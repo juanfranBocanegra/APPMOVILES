@@ -206,28 +206,34 @@ class ProfileView(generics.GenericAPIView):
                 user.save(update_fields=["profile_image"])
                 flag = 1
 
-        update = request.data.get("update")
+        
      
 
         
         try:
-            if "name" in update.keys():
-                user.name = update["name"]
-                user.save(update_fields=["name"])
-                flag = 1
+
             
 
-            if "password" in update.keys():
-                old_password = update["password"][0]
-                check = authenticate(username=user.username, password=old_password)
-                if check is None:
-                    return Response({"detail":"Wrong password"},status=status.HTTP_401_UNAUTHORIZED)
-                if update["password"][1] != update["password"][2]:
-                    return Response({"detail":"The two passwords are not the same"},status=status.HTTP_400_BAD_REQUEST)
+            if "name" in request.data.keys():
+                if len(request.data.get("name")) > 4:
+                    user.name = request.data.get("name")
+                    user.save(update_fields=["name"])
+                    flag = 1
+            
 
-                user.set_password(update["password"][1])
-                user.save()
-                flag = 1
+            if "password" in request.data.keys():
+                if len(request.data.get("password")[1]) >= 4:
+                    old_password = request.data.get("password")[0]
+                    check = authenticate(username=user.username, password=old_password)
+                    if check is None:
+                        return Response({"detail":"Wrong password"},status=status.HTTP_401_UNAUTHORIZED)
+                    if request.data.get("password")[1] != request.data.get("password")[2]:
+                        return Response({"detail":"The two passwords are not the same"},status=status.HTTP_400_BAD_REQUEST)
+
+                    print(request.data.get("password")[1])
+                    user.set_password(request.data.get("password")[1])
+                    user.save()
+                    flag = 1
         except Exception as e:
             print(e)
             if flag == 0:
@@ -383,12 +389,13 @@ class VoteView(generics.GenericAPIView):
 class SearchView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
 
-    def get(self, request, text):
+    def get(self, request, text : str):
         user = request.user
-
+        text = text.lower()
+        print("Search text: ",text)
         my_users = []
 
-        if text in user.username or text in user.name:
+        if text in user.username.lower() or text in user.name.lower():
             
             my_users.append(user)
 
@@ -402,7 +409,7 @@ class SearchView(generics.GenericAPIView):
 
 
         for u in followers_users+following_users:
-            if text in u.name or text in u.username:
+            if text in u.name.lower() or text in u.username.lower():
                 if u not in my_users:
                     my_users.append(u)
                 
