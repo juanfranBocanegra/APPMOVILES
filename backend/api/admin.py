@@ -5,9 +5,9 @@ from django.utils.safestring import mark_safe
 
 @admin.register(User)
 class UserAdmin(admin.ModelAdmin):
-    list_display = ('name', 'username','profile_image_tag', 'num_followers', 'num_followed')
-    fields = ['name', 'username', 'profile_image', 'num_followers', 'num_followed', 'coins', 'vote_times', 'current_vote', 'vote_closed']
-    readonly_fields = ['num_followers', 'num_followed','profile_image_tag']
+    list_display = ('name', 'username', 'profile_image_tag', 'num_followers', 'num_followed')
+    fields = ['name', 'username', 'profile_image', 'num_followers', 'num_followed', 'coins', 'vote_times', 'current_vote', 'vote_closed', 'is_superuser']
+    readonly_fields = ['num_followers', 'num_followed', 'profile_image_tag']
     search_fields = ['name', 'username']
 
     def profile_image_tag(self, instance):

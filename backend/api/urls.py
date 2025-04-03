@@ -6,7 +6,7 @@ from .views import  SignUpView, LoginView, CheckView,LogoutView, FollowView, \
 
 urlpatterns = [
     path("", ApiRootView.as_view(), name="api-root"),
-    path('signup/', SignUpView.as_view(), name='register'),
+    path('signup/', SignUpView.as_view(), name='signup'),
     path('login/', LoginView.as_view(), name='login'),
     path('check/', CheckView.as_view(), name='check'),
     path('logout/', LogoutView.as_view(), name='logout'),
