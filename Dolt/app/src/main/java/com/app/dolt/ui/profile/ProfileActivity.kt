@@ -29,34 +29,47 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
+
+/**
+ * Actividad encargada de mostrar y gestionar el perfil de un usuario.
+ * Permite ver la información del perfil, seguir o dejar de seguir, editar perfil y cerrar sesión.
+ */
 class ProfileActivity : MenuActivity() {
+
     private lateinit var binding: ActivityProfileBinding
     private val repository = ProfileRepository()
+
     private val userProfile: MutableLiveData<UserProfile> by lazy {
         MutableLiveData<UserProfile>()
     }
+
+    /**
+     * Observador del perfil que recarga la información cuando se actualiza.
+     */
     val profileObserver = Observer<UserProfile> { newName ->
-        // Update the UI, in this case, a TextView.
         if (this.userProfile.value != null) {
             loadProfile(this.userProfile.value?.username ?: "NULL")
-
         }
     }
 
-
+    /**
+     * Carga la información del perfil desde el repositorio.
+     *
+     * @param username : Nombre de usuario del perfil.
+     */
     private fun loadProfile(username: String){
         val ctx = this
         lifecycleScope.launch {
             try {
-
                 val userProfile: UserProfile? = repository.getProfile(username)
                 if (userProfile != null) {
                     ctx.userProfile.value = userProfile
                     Timber.i(userProfile.name + " " + userProfile.username + " " + userProfile.profile_image)
 
+                    // Carga la imagen de perfil
                     binding.profileImage.apply{
-                        post { // Espera a que el view tenga dimensiones
-                            val size = width // Usamos el ancho como base
+                        post {
+                            val size = width
                             layoutParams.height = size
                             requestLayout()
 
@@ -67,12 +80,16 @@ class ProfileActivity : MenuActivity() {
                                 .into(this)
                         }
                     }
+
+                    // Muestra la información del perfil
                     binding.profileName.text = userProfile.name
                     binding.profileUsername.text = "@" + userProfile.username
                     binding.profileFollowing.text =
                         getString(R.string.following_label, userProfile.num_followed.toString())
                     binding.profileFollowers.text =
                         getString(R.string.followers_label, userProfile.num_followers.toString())
+
+                    // Muestra los botones según el estado de relación
                     if (userProfile.following) {
                         binding.followButton.visibility = View.GONE
                         binding.unfollowButton.visibility = View.VISIBLE
@@ -84,36 +101,37 @@ class ProfileActivity : MenuActivity() {
                     ctx.userProfile.removeObservers(ctx)
 
                 } else {
-                    Toast.makeText(ctx, "Error de sesión, inicie de nuevo", Toast.LENGTH_SHORT)
-                        .show()
+                    Toast.makeText(ctx, "Error de sesión, inicie de nuevo", Toast.LENGTH_SHORT).show()
                     val intent = Intent(ctx, LoginActivity::class.java)
                     startActivity(intent)
                     finish()
                 }
             } catch (e: Exception) {
-                // Manejar errores (red, API, etc.)
                 e.printStackTrace()
             }
         }
     }
 
+    /**
+     * Método llamado al crear la actividad.
+     * Configura la interfaz y los eventos asociados al perfil.
+     *
+     * @param savedInstanceState : Estado anterior guardado (si existe).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
 
-
         Timber.e("---------------PROFILE_ACT CREATED")
 
         binding = ActivityProfileBinding.inflate(layoutInflater)
-        val container =
-            findViewById<FrameLayout>(R.id.container) //no se puede usar binding aqui, ya que accede al elemento de otro layout
+        val container = findViewById<FrameLayout>(R.id.container) 
         container.addView(binding.root)
-
 
         val myself = intent.getStringExtra("MYSELF") == "true"
 
+        // Configura la navegación y botones si el perfil es propio 
         if (myself) {
-
             val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
             bottomNavigation.selectedItemId = R.id.navigation_profile
             binding.logoutButton.visibility = View.VISIBLE
@@ -121,57 +139,45 @@ class ProfileActivity : MenuActivity() {
             binding.followButton.visibility = View.GONE
         }
 
-        /*ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }*/
-
         val username = intent.getStringExtra("USERNAME")
         val ctx = this
         if (username != null) {
-
             loadProfile(username)
 
-
-
-
-
+            // Seguir usuario
             binding.followButton.setOnClickListener {
                 lifecycleScope.launch {
                     RetrofitClient.apiService.follow(FollowRequest(username))
                     loadProfile(username)
                     binding.followButton.visibility = View.GONE
                     binding.unfollowButton.visibility = View.VISIBLE
-
                 }
-
             }
 
+            // Dejar de seguir usuario
             binding.unfollowButton.setOnClickListener {
                 lifecycleScope.launch {
                     RetrofitClient.apiService.unfollow(FollowRequest(username))
                     loadProfile(username)
                     binding.unfollowButton.visibility = View.GONE
                     binding.followButton.visibility = View.VISIBLE
-
-
                 }
             }
 
-
+            // Obtener lista de seguidores
             binding.profileFollowers.setOnClickListener {
                 lifecycleScope.launch {
                     RetrofitClient.apiService.getFollow()
                 }
             }
 
+            // Obtener lista de seguidos
             binding.profileFollowing.setOnClickListener {
                 lifecycleScope.launch {
-
                 }
             }
 
+            // Cerrar sesión
             binding.logoutButton.setOnClickListener {
                 val sharedPreferences = getSharedPreferences("MY_APP_PREFS", MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
@@ -191,10 +197,9 @@ class ProfileActivity : MenuActivity() {
                 val intent = Intent(ctx, LoginActivity::class.java)
                 startActivity(intent)
                 finish()
-
-
             }
 
+            // Editar perfil
             binding.editButton.setOnClickListener {
                 this.userProfile.observe(this, this.profileObserver)
                 this.userProfile.let { userProfile ->

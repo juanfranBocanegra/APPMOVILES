@@ -28,11 +28,22 @@ import com.app.dolt.model.UserProfile
 import com.app.dolt.ui.profile.ProfileActivity
 import timber.log.Timber
 
-class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>, private var profileActivity: ProfileActivity) : Fragment() {
+
+/**
+ * Fragmento encargado de editar el perfil de un usuario.
+ * Permite cambiar el nombre y la contraseña, y en un futuro la imagen de perfil.
+ *
+ * @property userProfile : Datos actuales del perfil del usuario.
+ * @property profileActivity : Actividad asociada que muestra el perfil.
+ */
+class ProfileEditFragment(
+    private var userProfile: MutableLiveData<UserProfile>, 
+    private var profileActivity: ProfileActivity
+) : Fragment() {
+
     private var _binding: FragmentProfileEditBinding? = null
     private val binding get() = _binding!!
     private var selectedImageUri: Uri? = null
-
 
     // Registro para el selector de imágenes
     private val pickImageLauncher = registerForActivityResult(
@@ -49,13 +60,19 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
         }
     }
 
+    /**
+     * Infla la vista del fragmento.
+     *
+     * @param inflater : Objeto utilizado para inflar la vista.
+     * @param container : Vista padre en la que se incluirá la vista inflada.
+     * @param savedInstanceState : Estado guardado previamente (si existe).
+     * @return Vista raíz del fragmento.
+     */
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-
-
         _binding = FragmentProfileEditBinding.inflate(inflater, container, false)
 
         ViewCompat.setOnApplyWindowInsetsListener(binding.root) { v, insets ->
@@ -64,19 +81,24 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
             insets
         }
 
-
-
         return binding.root
     }
 
+    /**
+     * Configura la vista una vez creada, incluyendo los eventos de los botones.
+     *
+     * @param view : Vista creada.
+     * @param savedInstanceState : Estado guardado previamente (si existe).
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-
         ViewCompat.requestApplyInsets(view)
-        // Cargar datos actuales del perfil
+
+        // Carga datos actuales del perfil
         loadCurrentProfile()
 
+        // Cierra el fragmento
         binding.closeEdit.setOnClickListener {
             parentFragmentManager.popBackStack()  // Cierra el fragmento
         }
@@ -92,15 +114,16 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
         }
     }
 
+    /**
+     * Carga los datos actuales del perfil en la vista.
+     */
     private fun loadCurrentProfile() {
-        // Aquí cargas los datos actuales del usuario (puedes pasarlos por Bundle o desde API)
-        val currentName = userProfile.value?.name // Reemplaza con datos reales
-
+        val currentName = userProfile.value?.name 
 
         binding.nameEditText.setText(currentName)
         binding.profileImage.apply{
-            post { // Espera a que el view tenga dimensiones
-                val size = width // Usamos el ancho como base
+            post {
+                val size = width
                 layoutParams.height = size
                 requestLayout()
 
@@ -113,14 +136,20 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
         }
     }
 
+    /**
+     * Abre el selector de imágenes para cambiar la imagen de perfil.
+     */
     private fun openImagePicker() {
         val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
         pickImageLauncher.launch(intent)
     }
 
+    /**
+     * Actualiza el perfil del usuario con los nuevos datos introducidos.
+     * Valida el nombre y las contraseñas antes de enviar la solicitud.
+     */
     private fun updateProfile() {
         val newName = binding.nameEditText.text.toString().trim()
-
 
         if (newName.length < 4) {
             Toast.makeText(requireContext(), "El nombre es demasiado corto", Toast.LENGTH_SHORT).show()
@@ -131,42 +160,23 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
 
         lifecycleScope.launch {
             try {
-
-                //ctx.userProfile.removeObservers(ctx.profileActivity)
-                // Subir imagen si se seleccionó una nueva
                 var newProfile = ProfileRequest()
-                /*selectedImageUri?.let { uri ->
-                    val file = File(uri.path) // Necesitas convertir Uri a File (ver nota abajo)
-                    val requestFile = file.asRequestBody("image/*".toMediaTypeOrNull())
-                    val imagePart = MultipartBody.Part.createFormData("profile_image", file.name, requestFile)
-
-                    // Llamada a la API para actualizar imagen
-                    //RetrofitClient.apiService.updateProfileImage(imagePart)
-                }*/*/
 
                 newProfile.name = newName
-                // Actualizar nombre
-                //val updateRequest = ProfileRequest(newName)
-                //RetrofitClient.apiService.updateProfile(updateRequest)
 
                 val currentPassword = binding.currentPasswordEditText.text.toString()
                 val newPassword1 = binding.password1EditText.text.toString()
                 val newPassword2 = binding.password2EditText.text.toString()
 
-                if (    currentPassword != ""
-                    ||  newPassword1 != ""
-                    ||  newPassword2 != ""){
-
+                if (currentPassword != "" ||  newPassword1 != "" ||  newPassword2 != ""){
                     if ( newPassword1.length < 4){
                         Toast.makeText(requireContext(), "Contraseña demasiado corta", Toast.LENGTH_SHORT).show()
                         return@launch
                     }
-
                     if ( newPassword1 != newPassword2){
                         Toast.makeText(requireContext(), "Las contraseñas no coinciden", Toast.LENGTH_SHORT).show()
                         return@launch
                     }
-
                     newProfile.password = listOf<String>(currentPassword, newPassword1, newPassword2)
                 }
 
@@ -179,11 +189,8 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
                 }
 
                 Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
-                // Cerrar fragmento o actualizar vista
+
                 userProfile.value?.name = newName
-                //userProfile.profile_image = newImage
-
-
 
                 parentFragmentManager.popBackStack()
             } catch (e: Exception) {
@@ -192,6 +199,9 @@ class ProfileEditFragment(private var userProfile: MutableLiveData<UserProfile>,
         }
     }
 
+    /**
+     * Limpia el binding y reactiva el observador al destruir la vista.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         this.userProfile.observe(this.profileActivity,this.profileActivity.profileObserver)

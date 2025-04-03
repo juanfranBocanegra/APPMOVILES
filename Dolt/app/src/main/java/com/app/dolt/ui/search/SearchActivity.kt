@@ -26,20 +26,30 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.launch
 
+
+/**
+ * Actividad encargada de gestionar la búsqueda de usuarios.
+ * Permite buscar otros usuarios y acceder a sus perfiles.
+ */
 class SearchActivity : MenuActivity() {
+
     private lateinit var binding: ActivitySearchBinding
     private val handler = Handler(Looper.getMainLooper())
     private var workRunnable: Runnable? = null
     private val delayMillis = 500L
 
+    /**
+     * Método llamado al crear la actividad.
+     * Configura la interfaz, los eventos y la lógica de búsqueda.
+     *
+     * @param savedInstanceState : Estado anterior guardado (si existe).
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         //enableEdgeToEdge()
 
         binding = ActivitySearchBinding.inflate((layoutInflater))
-
-        val container =
-            findViewById<FrameLayout>(R.id.container) //no se puede usar binding aqui, ya que accede al elemento de otro layout
+        val container = findViewById<FrameLayout>(R.id.container)
         container.addView(binding.root)
 
         val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
@@ -51,11 +61,9 @@ class SearchActivity : MenuActivity() {
             insets
         }
 
-
-
+        // Listener para detectar cambios en el campo de búsqueda 
         binding.editText.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-                // Antes de que cambie el texto
             }
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
@@ -64,13 +72,9 @@ class SearchActivity : MenuActivity() {
 
                 // Programa un nuevo Runnable después del retraso
                 workRunnable = Runnable {
-
-
                     if (s.toString().isNotEmpty()) {
-
                         lifecycleScope.launch {
                             try {
-
                                 val searchAdapter = SearchAdapter()
                                 binding.recyclerView.adapter = searchAdapter
                                 binding.recyclerView.layoutManager = LinearLayoutManager(baseContext)
@@ -79,13 +83,10 @@ class SearchActivity : MenuActivity() {
                                 Log.i("AA:", "AAAAAAAAA: $response")
                                 searchAdapter.updateSearch(response)
 
-
                                 searchAdapter.setOnItemClickListener { position ->
                                     val user = response[position]
-                                    val sharedPreferences =
-                                        getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
+                                    val sharedPreferences = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
                                     val myUsername = sharedPreferences.getString("USERNAME", null)
-
 
                                     val intent = Intent(baseContext, ProfileActivity::class.java)
                                     intent.putExtra("USERNAME", user.username)
@@ -95,29 +96,21 @@ class SearchActivity : MenuActivity() {
                                         intent.putExtra("MYSELF", "false")
                                     }
 
-
                                     val options = ActivityOptions.makeCustomAnimation(baseContext, 0, 0)
                                     startActivity(intent, options.toBundle())
                                 }
 
-
                             } catch (e: Exception) {
                                 Log.e("SEARCH: ", e.toString())
-                                //Toast.makeText(baseContext, "ERROR", Toast.LENGTH_SHORT).show()
                             }
-
                         }
-
                     }
-
                 }
                 handler.postDelayed(workRunnable!!, delayMillis)
             }
 
             override fun afterTextChanged(s: Editable?) {
-                // Después de que el texto cambie
             }
         })
-
     }
 }
