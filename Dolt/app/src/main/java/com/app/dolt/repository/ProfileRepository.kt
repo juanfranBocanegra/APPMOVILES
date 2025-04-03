@@ -5,9 +5,19 @@ import com.app.dolt.model.UserProfile
 import retrofit2.HttpException
 import java.io.IOException
 
+/**
+ * Repositorio encargado de gestionar las operaciones relacionadas con los perfiles de usuario.
+ */
 class ProfileRepository {
     private val apiService = RetrofitClient.apiService
 
+    /**
+     * Obtiene el perfil de un usuario específico desde la API.
+     * 
+     * @param username : Nombre de usuario de cuyo perfil se desea obtener.
+     * @return Objeto [UserProfile] si la respuesta es exitosa, o 'null' si no hay datos.
+     * @throws Excepción : Si ocurre un error de red o un error HTTP.
+     */
     suspend fun getProfile(username: String) :UserProfile? {
         return try {
             val response = apiService.getProfile(username)

@@ -16,15 +16,27 @@ import com.app.dolt.api.RetrofitClient
 import com.app.dolt.model.PostRequest
 import kotlinx.coroutines.launch
 
+
+/**
+ * Fragmento que muestra los detalles de un desafío en un diálogo.
+ * Permite al usuario ver la información del desafío y publicar un post si está disponible.
+ */
 class ChallengeDetailFragment : DialogFragment() {
+
     private var _binding: FragmentChallengeDetailBinding? = null
     private val binding get() = _binding!!
 
+    /**
+     * Establece el estilo del desafío.
+     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.FullScreenDialogStyle)
     }
 
+    /**
+     * Configura las dimensiones y animaciones del diálogo al iniciarse.
+     */
     override fun onStart() {
         super.onStart()
         dialog?.window?.apply {
@@ -37,16 +49,27 @@ class ChallengeDetailFragment : DialogFragment() {
         }
     }
 
-
+    /**
+     * Infla la vista del fragmento.
+     *
+     * @return Vista raíz del fragmento.
+     */
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
         _binding = FragmentChallengeDetailBinding.inflate(inflater, container, false)
         return binding.root
-
     }
 
+
+    /**
+     * Configura la vista una vez creada, incluyendo la carga de datos del desafío
+     * y la gestión de eventos como publicar un post o cerrar el diálogo.
+     *
+     * @param view Vista creada.
+     * @param savedInstanceState Estado anterior guardado (no utilizado).
+     */
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val challengeName = arguments?.getString("challenge_name") ?: "NULL"
@@ -74,12 +97,24 @@ class ChallengeDetailFragment : DialogFragment() {
         }
     }
 
+    /**
+     * Limpia el binding al destruir la vista para evitar fugas de memoria.
+     */
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
 
     companion object {
+        /**
+         * Crea una nueva instancia del fragmento con los datos del desafío.
+         *
+         * @param name Nombre del desafío.
+         * @param detail Detalle del desafío.
+         * @param id Identificador del desafío.
+         * @param available Indica si el desafío está disponible.
+         * @return Nueva instancia de [ChallengeDetailFragment].
+         */
         fun newInstance(name: String, detail: String, id: String, available: String): ChallengeDetailFragment {
             val fragment = ChallengeDetailFragment()
             val args = Bundle().apply {

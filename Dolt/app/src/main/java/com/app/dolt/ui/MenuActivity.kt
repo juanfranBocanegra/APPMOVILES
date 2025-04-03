@@ -17,11 +17,20 @@ import com.app.dolt.ui.profile.ProfileActivity
 import com.app.dolt.ui.search.SearchActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 
-// BaseActivity.kt
+/**
+ * Actividad base que contiene y gestiona la barra de navegación inferior.
+ * Todas las actividades que la extienden heredan la funcionalidad de navegación.
+ */
 open class MenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMenuBinding
 
+    /**
+     * Método llamado al crear la actividad.
+     * Configura la barra de navegación y sus eventos de selección.
+     *
+     * @param savedInstanceState : Estado anterior guardado (si existe).
+     */
     @SuppressLint("RestrictedApi")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -30,10 +39,11 @@ open class MenuActivity : AppCompatActivity() {
 
         binding = DataBindingUtil.setContentView(this, R.layout.activity_menu)
 
-        // Configura la barra de navegación
+        // Configura la barra de navegación inferior
         val bottomNavigation : BottomNavigationView = binding.bottomNavigation
         val menu = bottomNavigation.menu
 
+        // Ajusta el estado checkable de los elementos del menú
         for(i in 0 until menu.size()){
             (menu.getItem(i) as? MenuItemImpl)?.let{
                 it.isExclusiveCheckable = false
@@ -42,6 +52,7 @@ open class MenuActivity : AppCompatActivity() {
             }
         }
 
+        // Configura los eventos al seleccionar un elemento de la barra de navegación
         bottomNavigation.setOnItemSelectedListener  { item ->
             when (item.itemId) {
                 R.id.navigation_challenges -> {
@@ -80,7 +91,6 @@ open class MenuActivity : AppCompatActivity() {
                     }
                     true
                 }
-
                 else -> false
             }
         }
