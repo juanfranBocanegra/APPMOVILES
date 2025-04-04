@@ -13,6 +13,7 @@ from django.db.models import F, Q
 from backend import settings
 import random
 from .api_root import ApiRootView
+from rest_framework.parsers import MultiPartParser
 
 User = get_user_model()
 
@@ -102,8 +103,10 @@ class FollowView(generics.GenericAPIView):
             return Response({"detail": "Duplicated follow."})
         return Response({"detail": f"Following {followed.username}"}, status=status.HTTP_201_CREATED)
     
-    def get(self, request):
-        user = request.user
+    def get(self, request, username):
+        user = User.objects.filter(username=username)[0]
+        if user is None:
+            return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
         followers = user.followers.select_related('follower').all()
         following = user.following.select_related('followed').all()
@@ -199,16 +202,6 @@ class ProfileView(generics.GenericAPIView):
         user = request.user
         flag = 0
 
-        if "profile_image" in request.FILES:
-                if user.profile_image and not user.profile_image.name.endswith("default.png"):
-                    user.profile_image.delete(save=False)  
-                user.profile_image = request.FILES["profile_image"]
-                user.save(update_fields=["profile_image"])
-                flag = 1
-
-        
-     
-
         
         try:
 
@@ -244,6 +237,34 @@ class ProfileView(generics.GenericAPIView):
         #data["profile_image"] = get_resource_uri(request,data["profile_image"])
 
         return Response(data)
+
+    def delete(self, request):
+        user = request.user
+
+        user.delete()
+        
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+class ProfileImageView(generics.GenericAPIView):
+    parser_classes = [MultiPartParser]  # Permite recibir multipart/form-data
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        print("IMAGEN")
+        user = request.user
+        if "profile_image" not in request.FILES:
+            return Response({"error": "No image provided"}, status=400)
+
+        # Borrar imagen anterior si no es la default
+        if user.profile_image and not user.profile_image.name.endswith("default.png"):
+            user.profile_image.delete(save=False)
+
+        # Guardar nueva imagen
+        user.profile_image = request.FILES["profile_image"]
+        user.save(update_fields=["profile_image"])
+
+        return Response({"status": "Image updated successfully"}, status=200)
 
 
 class FeedView(generics.GenericAPIView):
@@ -405,8 +426,6 @@ class SearchView(generics.GenericAPIView):
         followers_users = [follow.follower for follow in followers]
         following_users = [follow.followed for follow in following]
 
-        
-
 
         for u in followers_users+following_users:
             if text in u.name.lower() or text in u.username.lower():
@@ -414,7 +433,7 @@ class SearchView(generics.GenericAPIView):
                     my_users.append(u)
                 
 
-        list_users = User.objects.filter(Q(username__contains=text)|Q(name__contains=text))
+        list_users = User.objects.filter(Q(username__icontains=text)|Q(name__icontains=text))
 
        
         
