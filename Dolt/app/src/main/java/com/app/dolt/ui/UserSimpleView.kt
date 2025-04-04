@@ -1,21 +1,20 @@
-package com.app.dolt.ui.search
+package com.app.dolt.ui
 
 import android.content.Context
-import android.util.Log
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import com.app.dolt.R
 import com.app.dolt.databinding.ItemSearchViewBinding
-
+import timber.log.Timber
 
 /**
- * Vista personalizada que representa un elemento de búsqueda de usuario.
+ * Vista personalizada que representa un elemento de usuario.
  * Utiliza un layout específico y permite configurar un listener de clic.
  *
- * @constructor Crea una nueva instancia de [SearchView].
+ * @constructor Crea una nueva instancia de [UserSimpleView].
  * @param context : Contexto de la aplicación.
  */
-class SearchView(
+class UserSimpleView(
     context: Context
 ) : LinearLayout(context) {
 
@@ -27,7 +26,7 @@ class SearchView(
         // Infla el layout asociado y vincula el binding
         LayoutInflater.from(context).inflate(R.layout.item_search_view, this, true)
         binding = ItemSearchViewBinding.inflate(LayoutInflater.from(context), this, true)
-        Log.i("HEIGHT::::::::::::",binding.main.height.toString())
+        Timber.Forest.tag("HEIGHT::::::::::::").i(binding.main.height.toString())
 
         // Configura el listener para el clic en la vista
         setOnClickListener {

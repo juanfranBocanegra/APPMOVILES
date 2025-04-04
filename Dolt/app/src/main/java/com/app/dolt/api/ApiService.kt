@@ -12,11 +12,16 @@ import com.app.dolt.model.PostRequest
 import com.app.dolt.model.ProfileRequest
 import com.app.dolt.model.SignUpRequest
 import com.app.dolt.model.UserSimple
+import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.Response
 import retrofit2.http.Body
+import retrofit2.http.DELETE
+import retrofit2.http.Multipart
+import retrofit2.http.PATCH
 import retrofit2.http.POST
+import retrofit2.http.Part
 
 /**
  * Interfaz que define los endpoints de la API para la aplicación Dolt!.
@@ -93,6 +98,17 @@ interface ApiService {
         @Body profileRequest: ProfileRequest
     ): Response<Unit>
 
+
+    @DELETE("profile/")
+    suspend fun deleteUser() : Response<Unit>
+
+
+    @Multipart
+    @POST("profile/image/")  // Usamos PATCH porque solo actualizamos un campo
+    suspend fun updateProfileImage(
+        @Part image: MultipartBody.Part
+    ): Response<Unit>
+
     /**
      * Obtiene el feed de publicaciones.
      * 
@@ -107,8 +123,8 @@ interface ApiService {
      * 
      * @return [Response] que contiene la información de los usuarios seguidos.
      */
-    @GET("follow/")
-    suspend fun getFollow() : Response<FollowResponse>
+    @GET("follow/{username}")
+    suspend fun getFollow(@Path("username") username: String) : FollowResponse
 
     /**
      * Envía una solicitud para seguir a un usuario.

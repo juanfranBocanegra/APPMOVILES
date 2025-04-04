@@ -1,22 +1,19 @@
-package com.app.dolt.ui.search
+package com.app.dolt.ui
 
 import android.annotation.SuppressLint
 import android.text.SpannableString
 import android.text.style.UnderlineSpan
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemSearchViewBinding
 import com.app.dolt.model.UserSimple
 import com.bumptech.glide.Glide
-import java.util.Locale
-
 
 /**
- * Adaptador para mostrar la lista de resultados de búsqueda de usuarios en un [RecyclerView].
+ * Adaptador para mostrar la lista de usuarios en un [androidx.recyclerview.widget.RecyclerView].
  */
-class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
+class UserSimpleAdapter : RecyclerView.Adapter<UserSimpleAdapter.SearchViewHolder>() {
 
     private val items = mutableListOf<UserSimple>()
     private val width = 200
@@ -34,30 +31,30 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
     }
 
     /**
-     * Actualiza la lista de usuarios con nuevos resultados de búsqueda.
+     * Actualiza la lista de usuarios.
      *
      * @param newUsers : Nueva lista de usuarios.
      */
     @SuppressLint("NotifyDataSetChanged")
-    fun updateSearch(newUsers: List<UserSimple>) {
+    fun updateUsers(newUsers: List<UserSimple>) {
         items.clear()
         items.addAll(newUsers)
         notifyDataSetChanged() // Notifica al RecyclerView que los datos han cambiado
     }
 
     /**
-     * ViewHolder que representa cada elemento de la lista de búsqueda.
+     * ViewHolder que representa cada elemento de la lista.
      *
      * @property binding : Enlace a la vista del elemento.
      */
     class SearchViewHolder(val binding: ItemSearchViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     /**
-     * Crea y devuelve un nuevo [SearchViewHolder].
+     * Crea y devuelve un nuevo [UserSimpleViewHolder].
      *
      * @param parent : Vista padre.
      * @param viewType : Tipo de vista (no utilizado en este caso).
-     * @return Nueva instancia de [SearchViewHolder].
+     * @return Nueva instancia de [UserSimpleViewHolder].
      */
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchViewHolder {
         val binding = ItemSearchViewBinding.inflate(
@@ -94,7 +91,7 @@ class SearchAdapter : RecyclerView.Adapter<SearchAdapter.SearchViewHolder>() {
 
         // Mostrar nombre y usuario
         holder.binding.name.text = user.name
-        val spannableString = SpannableString("@"+user.username)
+        val spannableString = SpannableString("@" + user.username)
         spannableString.setSpan(UnderlineSpan(), 0, user.username.length+1, 0)
         holder.binding.user.text = spannableString
 

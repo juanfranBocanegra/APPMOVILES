@@ -1,4 +1,5 @@
 import android.app.Activity
+import android.app.AlertDialog
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -12,19 +13,15 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import com.app.dolt.R
 import com.app.dolt.databinding.FragmentProfileEditBinding
 import com.app.dolt.model.ProfileRequest
 import com.bumptech.glide.Glide
 import kotlinx.coroutines.launch
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.MultipartBody
-import okhttp3.RequestBody.Companion.asRequestBody
-import java.io.File
 import androidx.lifecycle.lifecycleScope
 import com.app.dolt.api.RetrofitClient
 import com.app.dolt.model.UserProfile
+import com.app.dolt.ui.login.LoginActivity
 import com.app.dolt.ui.profile.ProfileActivity
 import timber.log.Timber
 
@@ -45,6 +42,8 @@ class ProfileEditFragment(
     private val binding get() = _binding!!
     private var selectedImageUri: Uri? = null
 
+
+
     // Registro para el selector de imágenes
     private val pickImageLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -52,10 +51,18 @@ class ProfileEditFragment(
         if (result.resultCode == Activity.RESULT_OK) {
             result.data?.data?.let { uri ->
                 selectedImageUri = uri
-                Glide.with(this)
-                    .load(uri)
-                    .circleCrop()
-                    .into(binding.profileImage)
+                binding.profileImage.apply {  post {
+                    val size = width
+                    layoutParams.height = size
+                    requestLayout()
+
+                    Glide.with(context)
+                        .load(uri)
+                        .override(size, size)
+                        .centerCrop()
+                        .into(this)
+                }
+                }
             }
         }
     }
@@ -112,8 +119,60 @@ class ProfileEditFragment(
         binding.saveButton.setOnClickListener {
             updateProfile()
         }
+
+        binding.deleteUserButton.setOnClickListener {
+            showDeleteAccountConfirmationDialog()
+        }
     }
 
+    private fun showDeleteAccountConfirmationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle(getString(R.string.delete_account))
+            .setMessage(getString(R.string.delete_account_confirmation))
+            .setPositiveButton(R.string.delete) { dialog, _ ->
+                deleteUserAccount()
+                dialog.dismiss()
+            }
+            .setNegativeButton(R.string.cancel) { dialog, _ ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
+    }
+
+    
+    /**
+     * Elimina la cuenta del usuario actual.
+     * 
+     * Esta función se encarga de realizar las operaciones necesarias para
+     * eliminar la cuenta del usuario de la aplicación. Asegúrate de que
+     * el usuario confirme esta acción antes de llamarla, ya que esta operación
+     * podría ser irreversible.
+     */
+    private fun deleteUserAccount() {
+        lifecycleScope.launch {
+            try {
+                // Mostrar progreso
+
+
+                val response = RetrofitClient.apiService.deleteUser()
+
+                if (response.isSuccessful) {
+
+                    Toast.makeText(requireContext(), "Cuenta eliminada", Toast.LENGTH_SHORT).show()
+                    val intent = Intent(context, LoginActivity::class.java)
+                    startActivity(intent)
+                    requireActivity().finish()
+                } else {
+                    Toast.makeText(requireContext(), "Error al eliminar cuenta", Toast.LENGTH_SHORT).show()
+                }
+
+
+            } catch (e: Exception) {
+                Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
     /**
      * Carga los datos actuales del perfil en la vista.
      */
@@ -140,7 +199,9 @@ class ProfileEditFragment(
      * Abre el selector de imágenes para cambiar la imagen de perfil.
      */
     private fun openImagePicker() {
-        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
+            type = "image/*"
+        }
         pickImageLauncher.launch(intent)
     }
 
@@ -160,6 +221,7 @@ class ProfileEditFragment(
 
         lifecycleScope.launch {
             try {
+                binding.saveButton.isEnabled = false
                 var newProfile = ProfileRequest()
 
                 newProfile.name = newName
@@ -188,9 +250,30 @@ class ProfileEditFragment(
                     return@launch
                 }
 
+                if (selectedImageUri != null){
+                    val imagePart = UriToMultipartConverter.convert(
+                        uri = selectedImageUri!!,
+                        context = requireContext(),
+                        formDataName = "profile_image"  // Nombre que espera tu backend
+                    ) ?: run {
+                        Toast.makeText(requireContext(), "Error", Toast.LENGTH_SHORT).show()
+                        return@launch
+                    }
+
+                    try {
+                        RetrofitClient.apiService.updateProfileImage(imagePart)
+                        Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
+                        binding.saveButton.isEnabled = true
+                    } catch (e: Exception) {
+                        Toast.makeText(requireContext(), "Error: ${e.message}", Toast.LENGTH_SHORT).show()
+                    }
+                }
+
                 Toast.makeText(requireContext(), "Perfil actualizado", Toast.LENGTH_SHORT).show()
+                binding.saveButton.isEnabled = true
 
                 userProfile.value?.name = newName
+
 
                 parentFragmentManager.popBackStack()
             } catch (e: Exception) {

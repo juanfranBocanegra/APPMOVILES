@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemPostViewBinding
 import com.app.dolt.model.Post
+import com.app.dolt.utils.DateFormatter
 import com.bumptech.glide.Glide
 import java.util.Locale
 
@@ -105,7 +106,8 @@ class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
         holder.binding.postUser.text = spannableString
         holder.binding.PostText.text = post.text
         holder.binding.PostChallenge.text = post.challenge
-        holder.binding.PostDate.text = post.date
+        val formattedDate = DateFormatter.formatApiDate(post.date)
+        holder.binding.PostDate.text = formattedDate
 
         // Configura los listeners para los elementos clicables
         holder.binding.profileImage.setOnClickListener {
