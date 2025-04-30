@@ -1,14 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        app:cardCornerRadius="20dp"
+        app:cardBackgroundColor="@color/purple_500">
+
+
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/purple_500"
         android:orientation="vertical"
-        android:padding="16dp"
-        android:paddingBottom="20dp"
+        android:padding="10dp"
         android:layout_marginHorizontal="10dp"
-        android:layout_marginTop="10dp">
+        >
 
         <TextView
             android:id="@+id/nameText"
@@ -28,4 +38,5 @@
             android:textSize="14sp" />
 
     </LinearLayout>
+    </com.google.android.material.card.MaterialCardView>
 </layout>

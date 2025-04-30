@@ -91,7 +91,7 @@
                 android:id="@+id/loginText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/registerText" />
+                android:text="@string/loginText" />
 
             <TextView
                 android:id="@+id/loginLink"

@@ -3,6 +3,9 @@ package com.app.dolt.ui.profile
 import ProfileEditFragment
 import android.content.Intent
 import android.os.Bundle
+import android.text.Spannable
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
@@ -24,6 +27,7 @@ import com.app.dolt.model.UserProfile
 import com.app.dolt.repository.ProfileRepository
 import com.app.dolt.ui.MenuActivity
 import com.app.dolt.ui.login.LoginActivity
+import com.app.dolt.ui.profile.ProfileFollowFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
@@ -84,10 +88,20 @@ class ProfileActivity : MenuActivity() {
                     // Muestra la información del perfil
                     binding.profileName.text = userProfile.name
                     binding.profileUsername.text = "@" + userProfile.username
-                    binding.profileFollowing.text =
-                        getString(R.string.following_label, userProfile.num_followed.toString())
-                    binding.profileFollowers.text =
-                        getString(R.string.followers_label, userProfile.num_followers.toString())
+
+                    val followingText = getString(R.string.following_label, userProfile.num_followed.toString())
+                    val followersText = getString(R.string.followers_label, userProfile.num_followers.toString())
+
+                    val profileFollowingText = SpannableString(followingText).apply {
+                        setSpan(UnderlineSpan(), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+
+                    val profileFollowersText = SpannableString(followersText).apply {
+                        setSpan(UnderlineSpan(), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+                    }
+
+                    binding.profileFollowing.text = profileFollowingText
+                    binding.profileFollowers.text = profileFollowersText
 
                     // Muestra los botones según el estado de relación
                     if (userProfile.following) {
@@ -144,6 +158,16 @@ class ProfileActivity : MenuActivity() {
         if (username != null) {
             loadProfile(username)
 
+            val profileFollowingText = SpannableString(binding.profileFollowing.text.toString()).apply {
+                setSpan(UnderlineSpan(), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            val profileFollowersText = SpannableString(binding.profileFollowers.text.toString()).apply {
+                setSpan(UnderlineSpan(), 0, length, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+            }
+
+            binding.profileFollowing.text = profileFollowingText
+            binding.profileFollowers.text = profileFollowersText
             // Seguir usuario
             binding.followButton.setOnClickListener {
                 lifecycleScope.launch {
@@ -164,18 +188,32 @@ class ProfileActivity : MenuActivity() {
                 }
             }
 
-            // Obtener lista de seguidores
-            binding.profileFollowers.setOnClickListener {
-                lifecycleScope.launch {
-                    RetrofitClient.apiService.getFollow()
-                }
-            }
-
             // Obtener lista de seguidos
             binding.profileFollowing.setOnClickListener {
                 lifecycleScope.launch {
+                    val fragment = ProfileFollowFragment(username, 1)
+
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit()
                 }
             }
+
+            // Obtener lista de seguidores
+            binding.profileFollowers.setOnClickListener {
+                lifecycleScope.launch {
+                    val fragment = ProfileFollowFragment(username, 2)
+
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.container, fragment)
+                        .addToBackStack(null)
+                        .commit()
+                }
+            }
+
+
+
 
             // Cerrar sesión
             binding.logoutButton.setOnClickListener {
@@ -195,6 +233,9 @@ class ProfileActivity : MenuActivity() {
                 }
 
                 val intent = Intent(ctx, LoginActivity::class.java)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                 startActivity(intent)
                 finish()
             }
@@ -210,7 +251,7 @@ class ProfileActivity : MenuActivity() {
                         .addToBackStack(null)
                         .commit()
                 }
-                Timber.i("AAAAAAAAAAA" + this.userProfile.value?.name.toString())
+                Timber.i("AAAAAAAAAAA%s", this.userProfile.value?.name.toString())
             }
 
         }

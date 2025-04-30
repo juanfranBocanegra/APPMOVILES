@@ -31,4 +31,8 @@
     <string name="edit_name_label">Nombre:</string>
     <string name="edit_password_label">Contraseña:</string>
     <string name="change_image">Cambiar foto</string>
+    <string name="delete_account">Eliminar cuenta</string>
+    <string name="delete_account_confirmation">¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.</string>
+    <string name="delete">Eliminar</string>
+    <string name="cancel">Cancelar</string>
 </resources>

@@ -10,8 +10,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.widget.FrameLayout
-import android.widget.Toast
-import androidx.activity.enableEdgeToEdge
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
@@ -19,11 +17,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.app.dolt.R
 import com.app.dolt.api.RetrofitClient
 import com.app.dolt.databinding.ActivitySearchBinding
-import com.app.dolt.ui.MainActivity
 import com.app.dolt.ui.MenuActivity
+import com.app.dolt.ui.UserSimpleAdapter
 import com.app.dolt.ui.profile.ProfileActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.internal.ContextUtils.getActivity
 import kotlinx.coroutines.launch
 
 
@@ -75,15 +72,15 @@ class SearchActivity : MenuActivity() {
                     if (s.toString().isNotEmpty()) {
                         lifecycleScope.launch {
                             try {
-                                val searchAdapter = SearchAdapter()
-                                binding.recyclerView.adapter = searchAdapter
+                                val userSimpleAdapter = UserSimpleAdapter()
+                                binding.recyclerView.adapter = userSimpleAdapter
                                 binding.recyclerView.layoutManager = LinearLayoutManager(baseContext)
 
                                 val response = RetrofitClient.apiService.search(s.toString())
                                 Log.i("AA:", "AAAAAAAAA: $response")
-                                searchAdapter.updateSearch(response)
+                                userSimpleAdapter.updateUsers(response)
 
-                                searchAdapter.setOnItemClickListener { position ->
+                                userSimpleAdapter.setOnItemClickListener { position ->
                                     val user = response[position]
                                     val sharedPreferences = getSharedPreferences("MY_APP_PREFS", Context.MODE_PRIVATE)
                                     val myUsername = sharedPreferences.getString("USERNAME", null)
