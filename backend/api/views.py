@@ -15,6 +15,8 @@ import random
 from .api_root import ApiRootView
 from rest_framework.parsers import MultiPartParser
 
+from firebase_admin import auth
+
 User = get_user_model()
 
 def get_resource_uri(request, res):
@@ -25,6 +27,48 @@ def get_resource_uri(request, res):
 class NoAuthentication(BaseAuthentication):
     def authenticate(self, request):
         return None  # No autentica al usuario
+
+
+class GoogleLoginView(generics.GenericAPIView):
+    permission_classes = [AllowAny]
+    authentication_classes = [NoAuthentication]
+
+
+    def post(self, request):
+      
+        id_token = request.data.get("id_token")  # Recibimos el token de Firebase desde el frontend
+
+        print(id_token)
+
+        if not id_token:
+            return Response({"error": "Missing ID token"}, status=status.HTTP_400_BAD_REQUEST)
+
+        #try:
+        # Verificar el token con Firebase
+        decoded_token = auth.verify_id_token(id_token)
+        uid = decoded_token["uid"]
+        email = decoded_token.get("email", "")
+
+        email_first_part = email.split("@")[0]
+        username = email_first_part + "_google"
+
+        user, created = User.objects.get_or_create(username=uid, defaults={"name":email_first_part,"username": username})
+
+        # Generar JWT de Django para la sesión
+        refresh = RefreshToken.for_user(user)
+
+        return Response({
+            "refresh": str(refresh),
+            "access": str(refresh.access_token),
+            "user": {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email,
+            }
+        })
+        #except auth.InvalidIdTokenError:
+        #    return Response({"error": "Invalid token"}, status=status.HTTP_401_UNAUTHORIZED)
+
 
 
 class CheckView(generics.GenericAPIView):

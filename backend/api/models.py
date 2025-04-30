@@ -60,7 +60,7 @@ class Post(models.Model):
     text = models.TextField(null=True)
     #image = ...
     date = models.DateTimeField(default=datetime.now, blank=True)
-    challenge = models.ForeignKey('Challenge', on_delete=models.RESTRICT, null=True, blank=True)
+    challenge = models.ForeignKey('Challenge', on_delete=models.CASCADE, null=True, blank=True)
     points = models.IntegerField(default=0)
 
     class Meta:

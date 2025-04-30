@@ -14,9 +14,17 @@ from pathlib import Path
 from datetime import timedelta
 import os
 import dj_database_url
+import firebase_admin
+from firebase_admin import credentials, auth
+
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+cred = credentials.Certificate(os.path.join(BASE_DIR,"google-services.json"))  # Descarga este archivo desde Firebase
+firebase_admin.initialize_app(cred)
 
 # Archivos estáticos
 STATIC_URL = "/static/"
