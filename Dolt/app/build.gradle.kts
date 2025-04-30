@@ -1,7 +1,9 @@
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android) version "2.0.21"
+    id("com.google.gms.google-services")
     id("kotlin-kapt")
+
 
 }
 
@@ -96,9 +98,20 @@ dependencies {
     annotationProcessor(libs.compiler)
 
     // También necesitas estas dependencias si usas Kotlin:
+
     implementation(libs.okhttp3.integration)
     implementation(libs.annotations)
     kapt("com.github.bumptech.glide:compiler:4.16.0")
+
+    implementation(platform(libs.firebase.bom))
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+
+    implementation (libs.play.services.auth)
+
+    implementation(libs.androidx.credentials)
+    implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
+    implementation(libs.googleid)
 
     // Retrofit
     implementation(libs.retrofit)
@@ -121,3 +134,4 @@ dependencies {
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
 }
+

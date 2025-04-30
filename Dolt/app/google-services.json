@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1015296211238",
+    "project_id": "dolt-e68d5",
+    "storage_bucket": "dolt-e68d5.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1015296211238:android:7714001e8a151cca10a9e7",
+        "android_client_info": {
+          "package_name": "com.app.dolt"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1015296211238-1jj9352ef16le4o5ev965mr0knku6m08.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAP787ph4rByynbLfqFtkfIHesAW1M-5jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1015296211238-1jj9352ef16le4o5ev965mr0knku6m08.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

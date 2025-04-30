@@ -3,6 +3,7 @@ package com.app.dolt.api
 import com.app.dolt.model.Challenge
 import com.app.dolt.model.FollowRequest
 import com.app.dolt.model.FollowResponse
+import com.app.dolt.model.GoogleLoginRequest
 import com.app.dolt.model.LoginRequest
 import com.app.dolt.model.LoginResponse
 import com.app.dolt.model.LogoutRequest
@@ -49,6 +50,11 @@ interface ApiService {
     @POST("login/")
     suspend fun login(
         @Body loginRequest: LoginRequest
+    ): Response<LoginResponse>
+
+    @POST("google-login/")
+    suspend fun googleLogin(
+        @Body request: GoogleLoginRequest
     ): Response<LoginResponse>
 
     /**

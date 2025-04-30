@@ -35,5 +35,7 @@
     <string name="delete">Delete</string>
     <string name="cancel">Cancel</string>
 
+    <string name="default_web_client_id">dolt-e68d5</string>
+
 
 </resources>

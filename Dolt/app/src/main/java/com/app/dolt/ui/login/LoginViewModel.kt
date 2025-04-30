@@ -8,6 +8,7 @@ import com.app.dolt.model.LoginRequest
 import com.app.dolt.model.LoginResponse
 import kotlinx.coroutines.launch
 import retrofit2.Response
+import androidx.core.content.edit
 
 
 /**
@@ -56,7 +57,7 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
      * @param token : Token de acceso.
      */
     private fun saveAccessToken(token: String) {
-        sharedPreferences.edit().putString("ACCESS_TOKEN", token).apply()
+        sharedPreferences.edit() { putString("ACCESS_TOKEN", token) }
     }
 
     /**
@@ -65,7 +66,7 @@ class LoginViewModel(private val sharedPreferences: SharedPreferences) : ViewMod
      * @param token : Token de actualización.
      */
     private fun saveRefreshToken(token: String) {
-        sharedPreferences.edit().putString("REFRESH_TOKEN", token).apply()
+        sharedPreferences.edit() { putString("REFRESH_TOKEN", token) }
     }
 
     /**
