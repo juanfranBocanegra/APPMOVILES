@@ -12,9 +12,11 @@ import com.app.dolt.R
 import com.app.dolt.databinding.FragmentChallengeDetailBinding
 import androidx.core.graphics.drawable.toDrawable
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import com.app.dolt.api.RetrofitClient
 import com.app.dolt.model.PostRequest
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 /**
@@ -95,6 +97,8 @@ class ChallengeDetailFragment : DialogFragment() {
                 dismiss()
             }
         }
+
+
     }
 
     /**

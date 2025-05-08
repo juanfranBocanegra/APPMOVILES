@@ -16,6 +16,13 @@ import com.app.dolt.ui.post.FeedPActivity
 import com.app.dolt.ui.profile.ProfileActivity
 import com.app.dolt.ui.search.SearchActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import androidx.core.view.size
+import androidx.core.view.get
+import androidx.lifecycle.lifecycleScope
+import com.app.dolt.repository.UserStatsRepository
+import com.app.dolt.utils.StatsHandler
+import kotlinx.coroutines.launch
+import timber.log.Timber
 
 /**
  * Actividad base que contiene y gestiona la barra de navegación inferior.
@@ -44,13 +51,28 @@ open class MenuActivity : AppCompatActivity() {
         val menu = bottomNavigation.menu
 
         // Ajusta el estado checkable de los elementos del menú
-        for(i in 0 until menu.size()){
-            (menu.getItem(i) as? MenuItemImpl)?.let{
+        for(i in 0 until menu.size){
+            (menu[i] as? MenuItemImpl)?.let{
                 it.isExclusiveCheckable = false
                 it.isChecked = false
                 it.isExclusiveCheckable = true
             }
         }
+
+
+        // Actualiza periódicamente los elementos coins y vote_times
+        val userStatsRepository = UserStatsRepository() // Asegúrate de tener acceso al repositorio
+        StatsHandler.startRepeatingTask {
+            lifecycleScope.launch {
+                userStatsRepository.refreshUserStats()
+                val userStats = userStatsRepository.getLocalUserStats()
+                binding.coins.text = "\uD83E\uDE99" + userStats?.coins.toString()
+                binding.voteTimes.text = userStats?.vote_times.toString()
+            }
+        }
+
+
+
 
         // Configura los eventos al seleccionar un elemento de la barra de navegación
         bottomNavigation.setOnItemSelectedListener  { item ->

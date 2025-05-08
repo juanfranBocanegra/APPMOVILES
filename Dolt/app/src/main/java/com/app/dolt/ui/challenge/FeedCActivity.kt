@@ -17,6 +17,10 @@ import com.app.dolt.ui.MenuActivity
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import androidx.core.view.isVisible
+import androidx.navigation.findNavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.ui.NavigationUI
+import timber.log.Timber
 
 
 /**
@@ -26,73 +30,25 @@ import androidx.core.view.isVisible
 class FeedCActivity : MenuActivity() {
     private lateinit var binding: ActivityFeedCBinding
 
-    /**
-     * ViewModel que gestiona los datos de los desafíos.
-     */
-    private val viewModel: ChallengeViewModel by viewModels()
-
-    /**
-     * Método llamado al crear la actividad.
-     * Configura el layout, el RecyclerView y observa los datos del ViewModel.
-     *
-     * @param savedInstanceState : Estado anterior guardado (si existe).
-     */
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
 
         binding = ActivityFeedCBinding.inflate(layoutInflater)
-        val container = findViewById<FrameLayout>(R.id.container) //no se puede usar binding aqui, ya que accede al elemento de otro layout
+        val container = findViewById<FrameLayout>(R.id.container) // No se puede usar binding aqui, ya que accede al elemento de otro layout
         container.addView(binding.root)
 
-        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
-        bottomNavigation.selectedItemId = R.id.navigation_challenges
 
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
+        // Obtén el NavHostFragment y el NavController
+        val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navController = navHostFragment.navController
 
-        binding.recyclerView.layoutManager = LinearLayoutManager(this)
+        // Si tienes una barra de navegación o algún controlador, configura la navegación
 
-        // Observa los cambios en la lista de desafíos y actualiza el RecyclerView
-        lifecycleScope.launch {
-            viewModel.challenges.collect { challenges ->
-                if (challenges.isNotEmpty()) {
-                    val adapter = ChallengeAdapter()
-                    adapter.updateChallenges(challenges)  
-                    binding.recyclerView.adapter = adapter
-
-                    // Establecer el listener para cada elemento
-                    adapter.setOnItemClickListener { position ->
-                        val challenge = challenges[position]  
-                        showChallengeDetail(challenge.name, challenge.detail, challenge.id, challenge.available.toString())
-                    }
-                }
-            }
-        }
-
-        // Solicita la carga de desafíos al ViewModel
-        viewModel.loadChallenges()
     }
 
-    /**
-     * Muestra el fragmento con los detalles del desafío seleccionado.
-     *
-     * @param name : Nombre del desafío.
-     * @param detail : Detalle del desafío.
-     * @param id : Identificador del desafío.
-     * @param available : Disponibilidad del desafío.
-     */
-    private fun showChallengeDetail(name: String, detail: String, id: String, available: String) {
-        val fragment = ChallengeDetailFragment.newInstance(name, detail, id, available)
-
-        supportFragmentManager.let {
-            fragment.show(it, "ChallengeDetailFragment")
-        }
-
-        Log.d("ChallengeDetail", "Showing dialog for: $name")
+    override fun onSupportNavigateUp(): Boolean {
+        val navController = (supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment).navController
+        return navController.navigateUp() || super.onSupportNavigateUp()
     }
 
 }

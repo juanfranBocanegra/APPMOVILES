@@ -1,0 +1,28 @@
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    app:startDestination="@id/feedCFragment">
+
+    <fragment
+        android:id="@+id/feedCFragment"
+        android:name="com.app.dolt.ui.challenge.FeedCFragment"
+        android:label="FeedCFragment"
+        tools:layout="@layout/fragment_feed_c">
+        <action
+            android:id="@+id/action_feedCFragment_to_voteFragment"
+            app:destination="@id/voteFragment" />
+
+        </fragment>
+
+    <!-- Otros fragmentos o destinos -->
+    <fragment
+        android:id="@+id/voteFragment"
+        android:name="com.app.dolt.ui.challenge.vote.VoteFragment"
+        android:label="VoteFragment"
+        tools:layout="@layout/fragment_vote" >
+        <action
+            android:id="@+id/action_voteFragment_to_feedCFragment"
+            app:destination="@id/feedCFragment" />
+
+    </fragment>
+</navigation>

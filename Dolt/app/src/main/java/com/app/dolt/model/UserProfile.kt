@@ -2,6 +2,9 @@ package com.app.dolt.model
 
 import com.app.dolt.api.RetrofitClient
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /*"name": "newname",
     "username": "usuario1",
     "num_followers": 0,
@@ -18,9 +21,10 @@ import com.app.dolt.api.RetrofitClient
  * @property following : Indica si el ususario actual sigue a este perfil.
  * @property follower : Indica si este perfil sigue al usuario actual.
  */
+@Entity
 data class UserProfile(
     var name : String = "NULL",
-    val username : String = "NULL",
+    @PrimaryKey val username : String = "NULL",
     var profile_image : String = "NULL",
     val num_followers : Int = 0,
     val num_followed : Int = 0,

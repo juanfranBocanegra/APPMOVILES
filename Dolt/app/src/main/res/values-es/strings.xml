@@ -35,4 +35,7 @@
     <string name="delete_account_confirmation">¿Estás seguro de que quieres eliminar tu cuenta? Esta acción no se puede deshacer.</string>
     <string name="delete">Eliminar</string>
     <string name="cancel">Cancelar</string>
+    <string name="vote_title">"Votación: "</string>
+    <string name="vote_button">Votar</string>
+    <string name="send_vote">Enviar votos</string>
 </resources>

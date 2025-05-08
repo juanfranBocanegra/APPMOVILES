@@ -13,6 +13,8 @@ import com.app.dolt.model.PostRequest
 import com.app.dolt.model.ProfileRequest
 import com.app.dolt.model.SignUpRequest
 import com.app.dolt.model.UserSimple
+import com.app.dolt.model.UserStats
+import com.app.dolt.model.VoteResponse
 import okhttp3.MultipartBody
 import retrofit2.http.GET
 import retrofit2.http.Path
@@ -20,7 +22,6 @@ import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Multipart
-import retrofit2.http.PATCH
 import retrofit2.http.POST
 import retrofit2.http.Part
 
@@ -82,7 +83,7 @@ interface ApiService {
      * @return Lista de objetos [Challenge].
      */
     @GET("challenges/")
-    suspend fun getChallenges(): List<Challenge>
+    suspend fun getChallenges(): Response<List<Challenge>>
 
     /**
      * Obtiene el perfil de un usuario específico.
@@ -115,6 +116,9 @@ interface ApiService {
         @Part image: MultipartBody.Part
     ): Response<Unit>
 
+    @GET("user_stats/")
+    suspend fun getUserStats(): Response<UserStats>
+
     /**
      * Obtiene el feed de publicaciones.
      * 
@@ -122,7 +126,7 @@ interface ApiService {
      * @return Lista de objetos [Post].
      */    
     @GET("feed/{size}")
-    suspend fun getFeed(@Path("size") size: Int): List<Post>
+    suspend fun getFeed(@Path("size") size: Int): Response<List<Post>>
 
     /**
      * Obtiene la lista de usuarios seguidos.
@@ -174,6 +178,13 @@ interface ApiService {
         @Body postRequest: PostRequest
     ): Response<Unit>
 
+    @GET("vote/")
+    suspend fun getVote(): Response<VoteResponse>
+
+    @POST("vote/")
+    suspend fun sendVote(
+        @Body voteRequest: VoteResponse
+    ): Response<Unit>
 
     // Método para obtener un post por ID (actualmente no utilizado).
     //@GET("posts/{id}")

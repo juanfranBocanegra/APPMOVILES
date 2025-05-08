@@ -136,7 +136,7 @@ class LoginActivity : AppCompatActivity() {
                 )
                 handleSignIn(result.credential)
             } catch (e: Exception) {
-                Log.e("LoginActivity", "Sign-in failed", e)
+                Timber.tag("LoginActivity").e(e, "Sign-in failed")
                 Toast.makeText(this@LoginActivity, "Error de autenticación", Toast.LENGTH_SHORT).show()
             }
         }
@@ -151,7 +151,7 @@ class LoginActivity : AppCompatActivity() {
             // Sign in to Firebase with using the token
             firebaseAuthWithGoogle(googleIdTokenCredential.idToken)
         } else {
-            Log.w("AAAA", "Credential is not of type Google ID!")
+            Timber.tag("AAAA").w("Credential is not of type Google ID!")
         }
     }
 
@@ -162,7 +162,7 @@ class LoginActivity : AppCompatActivity() {
             .addOnCompleteListener(this) { task ->
                 if (task.isSuccessful) {
                     // Sign in success, update UI with the signed-in user's information
-                    Log.d("AAA", "signInWithCredential:success")
+                    Timber.tag("AAA").d("signInWithCredential:success")
                     val user = auth.currentUser
 
                     user?.getIdToken(true)?.addOnCompleteListener { tokenTask ->

@@ -87,6 +87,8 @@
                     android:text="@string/post_button">
                 </Button>
 
+
+
             </LinearLayout>
         </androidx.cardview.widget.CardView>
     </androidx.constraintlayout.widget.ConstraintLayout>

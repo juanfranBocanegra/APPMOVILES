@@ -1,5 +1,8 @@
 package com.app.dolt.model
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+
 /**
  * Clase de datos que respresenta un desafío en la aplicación.
  * 
@@ -11,8 +14,9 @@ package com.app.dolt.model
  * @property challenge_type : Tipo de desafío.
  * @property available : Indica si el desafío está disponible.
  */
+@Entity
 data class Challenge(
-    val id: String = "NULL",
+    @PrimaryKey val id: String = "NULL",
     var name: String = "NULL",
     val name_es : String = "NULL",
     var detail: String = "NULL",

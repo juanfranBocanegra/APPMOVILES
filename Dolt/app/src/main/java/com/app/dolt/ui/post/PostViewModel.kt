@@ -32,10 +32,15 @@ class PostViewModel : ViewModel() {
     fun loadPosts(size: Int) {
         viewModelScope.launch {
             try {
-                _posts.value = repository.getFeed(size)
+                repository.refreshPosts()
+                _posts.value = repository.getLocalFeed(size)
             } catch (e: Exception) {
                 Log.i("ERROR",e.toString())
             }
         }
+    }
+
+    suspend fun refreshPosts(){
+        repository.refreshPosts()
     }
 }

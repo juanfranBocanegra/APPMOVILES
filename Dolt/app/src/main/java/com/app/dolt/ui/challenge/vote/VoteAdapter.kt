@@ -1,4 +1,4 @@
-package com.app.dolt.ui.post
+package com.app.dolt.ui.challenge.vote
 
 import android.annotation.SuppressLint
 import android.text.SpannableString
@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.app.dolt.databinding.ItemPostViewBinding
+import com.app.dolt.databinding.ItemVoteViewBinding
 import com.app.dolt.model.Post
 import com.app.dolt.utils.DateFormatter
 import com.bumptech.glide.Glide
@@ -16,20 +17,22 @@ import java.util.Locale
 /**
  * Adaptador para mostrar la lista de publicaciones en un [RecyclerView].
  */
-open class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
+open class VoteAdapter : RecyclerView.Adapter<VoteAdapter.VoteViewHolder>() {
 
     private val items = mutableListOf<Post>()
     private val width = 200
 
+
+
     // Listener para manejar clics en los elementos
-    private var onItemClickListener: ((position: Int) -> Unit)? = null
+    private var onItemClickListener: ((position: Int, dir : Int) -> Unit)? = null
 
     /**
      * Establece un listener para manejar el clic sobre un elemento de la lista.
      *
      * @param listener : Función que se ejecuta cuando se hace clic en un elemento.
      */
-    fun setOnItemClickListener(listener: (position: Int) -> Unit) {
+    fun setOnItemClickListener(listener: (position: Int, dir: Int) -> Unit) {
         this.onItemClickListener = listener
     }
 
@@ -50,7 +53,7 @@ open class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
      *
      * @property binding : Enlace a la vista del elemento.
      */
-    class PostViewHolder(val binding: ItemPostViewBinding) : RecyclerView.ViewHolder(binding.root)
+    class VoteViewHolder(val binding: ItemVoteViewBinding) : RecyclerView.ViewHolder(binding.root)
 
     /**
      * Crea y devuelve un nuevo [PostViewHolder].
@@ -59,13 +62,13 @@ open class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
      * @param viewType : Tipo de vista (no utilizado en este caso).
      * @return Nueva instancia de [PostViewHolder].
      */
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): PostViewHolder {
-        val binding = ItemPostViewBinding.inflate(
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): VoteViewHolder {
+        val binding = ItemVoteViewBinding.inflate(
             LayoutInflater.from(parent.context),
             parent,
             false
         )
-        return PostViewHolder(binding)
+        return VoteViewHolder(binding)
     }
 
     /**
@@ -75,7 +78,7 @@ open class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
      * @param holder :ViewHolder que representa el elemento.
      * @param position : Posición del elemento en la lista.
      */
-    override fun onBindViewHolder(holder: PostViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: VoteViewHolder, position: Int) {
         val currentLanguage = Locale.getDefault().language
         val post = items[position]
 
@@ -111,15 +114,13 @@ open class PostAdapter : RecyclerView.Adapter<PostAdapter.PostViewHolder>() {
         holder.binding.PostDate.text = formattedDate
 
         // Configura los listeners para los elementos clicables
-        holder.binding.profileImage.setOnClickListener {
-            onItemClickListener?.invoke(position)
+        holder.binding.moveUp.setOnClickListener {
+            onItemClickListener?.invoke(position, 0)
         }
-        holder.binding.postUser.setOnClickListener {
-            onItemClickListener?.invoke(position)
+        holder.binding.moveDown.setOnClickListener {
+            onItemClickListener?.invoke(position, 1)
         }
-        holder.binding.postUserName.setOnClickListener {
-            onItemClickListener?.invoke(position)
-        }
+
     }
 
     /**

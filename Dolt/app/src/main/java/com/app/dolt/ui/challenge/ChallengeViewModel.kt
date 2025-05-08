@@ -1,5 +1,6 @@
 package com.app.dolt.ui.challenge
 
+import android.content.Context
 import com.app.dolt.repository.ChallengeRepository
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -8,6 +9,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import android.util.Log
+import timber.log.Timber
 
 
 /**
@@ -32,10 +34,15 @@ class ChallengeViewModel : ViewModel() {
     fun loadChallenges() {
         viewModelScope.launch {
             try {
-                _challenges.value = repository.getChallenges()
+                repository.refreshChallenges()
+                _challenges.value = repository.getLocalChallenges()
             } catch (e: Exception) {
-                Log.i("ERROR",e.toString())
+                Timber.tag("ERROR").i(e.toString())
             }
         }
+    }
+
+    suspend fun refreshChallenges(){
+        repository.refreshChallenges()
     }
 }

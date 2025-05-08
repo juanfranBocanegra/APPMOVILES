@@ -55,6 +55,13 @@ class FeedPActivity : MenuActivity() {
             insets
         }
 
+        binding.swipeRefresh.setOnRefreshListener {
+            lifecycleScope.launch {
+                viewModel.refreshPosts()
+                viewModel.loadPosts(0)
+            }
+        }
+
         binding.recyclerView.layoutManager = LinearLayoutManager(this)
         val ctx = this
 
@@ -84,6 +91,7 @@ class FeedPActivity : MenuActivity() {
                         startActivity(intent, options.toBundle())
                     }
                 }
+                binding.swipeRefresh.isRefreshing = false
             }
         }
         

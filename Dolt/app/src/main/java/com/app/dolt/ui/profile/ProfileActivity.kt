@@ -27,6 +27,7 @@ import com.app.dolt.model.UserProfile
 import com.app.dolt.repository.ProfileRepository
 import com.app.dolt.ui.MenuActivity
 import com.app.dolt.ui.login.LoginActivity
+import com.app.dolt.ui.login.UnauthorizedLoginException
 import com.app.dolt.ui.profile.ProfileFollowFragment
 import com.bumptech.glide.Glide
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,7 +42,7 @@ import timber.log.Timber
 class ProfileActivity : MenuActivity() {
 
     private lateinit var binding: ActivityProfileBinding
-    private val repository = ProfileRepository()
+    private lateinit var repository : ProfileRepository
 
     private val userProfile: MutableLiveData<UserProfile> by lazy {
         MutableLiveData<UserProfile>()
@@ -65,7 +66,9 @@ class ProfileActivity : MenuActivity() {
         val ctx = this
         lifecycleScope.launch {
             try {
-                val userProfile: UserProfile? = repository.getProfile(username)
+                repository.refreshProfile(username)
+                val userProfile: UserProfile? = repository.getLocalProfile(username)
+                Timber.i("PROFILE: $userProfile")
                 if (userProfile != null) {
                     ctx.userProfile.value = userProfile
                     Timber.i(userProfile.name + " " + userProfile.username + " " + userProfile.profile_image)
@@ -114,13 +117,15 @@ class ProfileActivity : MenuActivity() {
 
                     ctx.userProfile.removeObservers(ctx)
 
-                } else {
-                    Toast.makeText(ctx, "Error de sesión, inicie de nuevo", Toast.LENGTH_SHORT).show()
-                    val intent = Intent(ctx, LoginActivity::class.java)
-                    startActivity(intent)
-                    finish()
                 }
-            } catch (e: Exception) {
+            } catch (e: UnauthorizedLoginException){
+                Toast.makeText(ctx, "Error de sesión, inicie de nuevo", Toast.LENGTH_SHORT).show()
+                val intent = Intent(ctx, LoginActivity::class.java)
+                startActivity(intent)
+                finish()
+            }
+
+            catch (e: Exception) {
                 e.printStackTrace()
             }
         }
@@ -152,6 +157,8 @@ class ProfileActivity : MenuActivity() {
             binding.editButton.visibility = View.VISIBLE
             binding.followButton.visibility = View.GONE
         }
+
+        repository = ProfileRepository(this)
 
         val username = intent.getStringExtra("USERNAME")
         val ctx = this

@@ -13,7 +13,9 @@ import androidx.lifecycle.lifecycleScope
 import com.app.dolt.api.RetrofitClient
 import com.app.dolt.ui.challenge.FeedCActivity
 import com.app.dolt.ui.login.LoginActivity
+import com.app.dolt.ui.login.UnauthorizedLoginException
 import kotlinx.coroutines.launch
+import timber.log.Timber
 
 
 /**
@@ -45,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         if (token == null || username == null) {
             navigateToLogin()
         }else{
-            checkTokenValidity(token)
+            checkTokenValidity()
         }
     }
 
@@ -55,18 +57,21 @@ class MainActivity : AppCompatActivity() {
      *
      * @param token : Token de autenticación.
      */
-    private fun checkTokenValidity(token: String) {
+    private fun checkTokenValidity() {
         lifecycleScope.launch {
             try {
                 val response = RetrofitClient.apiService.validateToken()
 
-                if (response.isSuccessful) {
-                    navigateToFeedC()
+                if (response.code() == 401) {
+                    throw UnauthorizedLoginException()
                 } else {
-                    navigateToLogin()
+                   navigateToFeedC()
                 }
-            } catch (e: Exception) {
+            } catch (e: UnauthorizedLoginException) {
                 navigateToLogin()
+            } catch (e: Exception){
+                Timber.e(e)
+                navigateToFeedC()
             }
         }
     }

@@ -36,6 +36,10 @@
     <string name="cancel">Cancel</string>
 
     <string name="default_web_client_id">dolt-e68d5</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="vote_title">"Vote: "</string>
+    <string name="vote_button">Vote</string>
+    <string name="send_vote">Send Vote</string>
 
 
 </resources>

@@ -75,8 +75,9 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="30dp"
             android:layout_marginStart="20dp"
-            android:layout_marginEnd="20dp"
             app:layout_constraintTop_toBottomOf="@id/postUser"
+            app:layout_constraintEnd_toStartOf="@id/move_up"
+            android:layout_marginEnd="50dp"
             android:text="Example"
             android:textSize="14sp" />
 
@@ -114,9 +115,37 @@
             android:layout_marginStart="10dp"
             android:layout_marginEnd="10dp"
             app:layout_constraintTop_toBottomOf="@id/PostText"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/move_up"
             android:text="2025-03-10 00:00"
             android:textSize="14sp" />
+
+        <Button
+            android:id="@+id/move_up"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/move_down"
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:textColor="@color/light"
+            android:text="⬆"
+            android:padding="0dp"
+            android:textSize="25sp"
+            android:backgroundTint="@color/purple_200"/>
+
+        <Button
+            android:id="@+id/move_down"
+            android:layout_margin="10dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/move_up"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_height="50dp"
+            android:layout_width="50dp"
+            android:textColor="@color/light"
+            android:text="⬇"
+            android:padding="0dp"
+            android:textSize="25sp"
+            android:backgroundTint="@color/purple_200"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -3,7 +3,8 @@ plugins {
     alias(libs.plugins.kotlin.android) version "2.0.21"
     id("com.google.gms.google-services")
     id("kotlin-kapt")
-
+    id("com.google.devtools.ksp")
+    id("androidx.navigation.safeargs.kotlin")
 
 }
 
@@ -81,10 +82,18 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+
+    sourceSets {
+        getByName("main").java.srcDirs("build/generated/source/navigation-args")
+    }
 }
 
 dependencies {
+    val room_version = "2.7.1"
+    implementation(libs.androidx.room.runtime)
+    ksp(libs.androidx.room.compiler)
 
+    implementation(libs.androidx.swiperefreshlayout)
     implementation(libs.timber)
 
     implementation(libs.androidx.cardview)
@@ -96,7 +105,11 @@ dependencies {
 
     implementation(libs.glide)
     annotationProcessor(libs.compiler)
+    annotationProcessor(libs.androidx.room.compiler)
+    implementation(libs.androidx.room.rxjava2)
+    implementation(libs.androidx.room.rxjava3)
 
+    implementation(libs.material.v190)
     // También necesitas estas dependencias si usas Kotlin:
 
     implementation(libs.okhttp3.integration)
@@ -106,9 +119,10 @@ dependencies {
     implementation(platform(libs.firebase.bom))
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
-
+    implementation (libs.firebase.messaging)  // FCM
     implementation (libs.play.services.auth)
-
+    implementation(libs.androidx.navigation.fragment.ktx.v275)
+    implementation(libs.androidx.navigation.ui.ktx.v275)
     implementation(libs.androidx.credentials)
     implementation("androidx.credentials:credentials-play-services-auth:1.5.0")
     implementation(libs.googleid)
