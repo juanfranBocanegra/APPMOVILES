@@ -42,6 +42,9 @@ class FeedCActivity : MenuActivity() {
         val navHostFragment = supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val navController = navHostFragment.navController
 
+        val bottomNavigation = findViewById<BottomNavigationView>(R.id.bottom_navigation)
+        bottomNavigation.selectedItemId = R.id.navigation_challenges
+
         // Si tienes una barra de navegación o algún controlador, configura la navegación
 
     }
