@@ -3,8 +3,9 @@ from django.contrib.auth.models import AbstractUser
 from datetime import datetime
 import uuid
 from django.db.models import JSONField
-
-
+from firebase_admin import messaging
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 from backend import settings
 
@@ -16,7 +17,7 @@ class User(AbstractUser):  # Extiende el modelo User
     coins = models.IntegerField(default=0)
     vote_times = models.IntegerField(default=0)
     current_vote = JSONField(default=list, blank=True)
-    vote_closed = models.BooleanField(default=False)
+    vote_closed = models.BooleanField(default=True)
 
     def __str__(self):
         return self.username
@@ -65,7 +66,6 @@ class Post(models.Model):
 
     class Meta:
         ordering = ['-date']
-
 
 
 

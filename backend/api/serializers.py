@@ -50,7 +50,7 @@ class UserFollowSerializer(serializers.ModelSerializer):
 class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post          #image
-        fields = ['id','user','text','date','challenge']
+        fields = ['id','user','text','date','challenge','points']
 
     # Sobreescribe el método `to_representation` para incluir el username
     def to_representation(self, instance):
@@ -59,7 +59,7 @@ class PostSerializer(serializers.ModelSerializer):
         representation['user'] = instance.user.username
         representation['name_user'] = instance.user.name
         
-        #Linea que causa el problema
+       
         representation['profile_image'] = instance.user.profile_image.url
         
         representation['challenge'] = 'NULL'

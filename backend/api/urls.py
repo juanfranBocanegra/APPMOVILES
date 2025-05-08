@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework.routers import DefaultRouter
 from .views import  SignUpView, LoginView, CheckView,LogoutView, FollowView, \
                     ProfileView, FeedView, ChallengeView, PostView, VoteView, UnfollowView, \
-                    SearchView, ApiRootView, ProfileImageView, GoogleLoginView
+                    SearchView, ApiRootView, ProfileImageView, GoogleLoginView, UserStatsView
 
 urlpatterns = [
     path("", ApiRootView.as_view(), name="api-root"),
@@ -17,6 +17,7 @@ urlpatterns = [
     path('profile/',ProfileView.as_view(), name='profile'),
     path('profile/<str:username>',ProfileView.as_view(), name='get_profile'),
     path('profile/image/', ProfileImageView.as_view(), name='profile-image'),
+    path('user_stats/', UserStatsView.as_view(), name='user-stats'),
     path('feed/<int:size>',FeedView.as_view(), name='feed'),
     path('challenges/',ChallengeView.as_view(),name='challenges'),
     path('post/',PostView.as_view(), name='post'),

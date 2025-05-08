@@ -52,7 +52,7 @@ class GoogleLoginView(generics.GenericAPIView):
         email_first_part = email.split("@")[0]
         username = email_first_part + "_google"
 
-        user, created = User.objects.get_or_create(username=uid, defaults={"name":email_first_part,"username": username})
+        user, created = User.objects.get_or_create(username=username, defaults={"name":email_first_part,"username": username})
 
         # Generar JWT de Django para la sesión
         refresh = RefreshToken.for_user(user)
@@ -311,6 +311,17 @@ class ProfileImageView(generics.GenericAPIView):
         return Response({"status": "Image updated successfully"}, status=200)
 
 
+class UserStatsView(generics.GenericAPIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        data = {
+            "coins": user.coins,
+            "vote_times": user.vote_times
+        }
+        return Response(data)
+
 class FeedView(generics.GenericAPIView):
     permission_classes = [IsAuthenticated]
     
@@ -388,13 +399,13 @@ class VoteView(generics.GenericAPIView):
         user = request.user 
         challenge = None
         if user.vote_times == 0:
-            return Response({"detail":"No more vote times"})
+            return Response({"detail":"No more vote times"},status=status.HTTP_400_BAD_REQUEST)
         
         voting_posts = []
         
-        if user.vote_closed == False:
+        if user.vote_closed == False and user.current_vote != []:
 
-            
+            print("VOTING")
             
             for post_id in user.current_vote:
                 post = Post.objects.filter(id=post_id)[0]
@@ -403,6 +414,7 @@ class VoteView(generics.GenericAPIView):
 
         else:
             challenge = Challenge.objects.order_by('?')[0]
+            print(challenge)
             voting_posts = Post.objects.filter(challenge=challenge).order_by('?')[:settings.VOTE_SIZE]
 
         challenge_data = ChallengeSerializer(challenge)
@@ -417,10 +429,13 @@ class VoteView(generics.GenericAPIView):
         return Response({"challenge":challenge_data.data, "posts":posts_data.data})
 
     def post(self, request):
-        user = request.user
-        voted_posts_data = request.data.get("posts")
-        challenge_data = request.data.get("challenge")
-        challenge = Challenge.objects.filter(id=challenge_data["id"])[0]
+        try:
+            user = request.user
+            voted_posts_data = request.data.get("posts")
+            challenge_data = request.data.get("challenge")
+            challenge = Challenge.objects.filter(id=challenge_data["id"])[0]
+        except:
+            return Response({"detail":"Bad request"}, status=status.HTTP_400_BAD_REQUEST)
 
         if user.vote_closed == True:
             return Response({"detail":"error, no vote"})
@@ -441,14 +456,17 @@ class VoteView(generics.GenericAPIView):
             except:
                 increment = 0
             post.points = F('points') + increment
+            post.user.coins = F('coins') + increment
+            post.user.save(update_fields=["coins"])
             post.save(update_fields=["points"])
 
         user.coins = F('coins') + settings.VOTE_REWARD
-        user.vote_times = max(F('vote_times') - 1, 0)
+        user.vote_times = user.vote_times - 1
         user.vote_closed = True
-        user.save(update_fields=["coins","vote_times","vote_closed"])
+        user.current_vote = []
+        user.save(update_fields=["coins","vote_times","vote_closed","current_vote"])
 
-        return Response({"OK"})
+        return Response({"detail":"OK"})
 
 
 class SearchView(generics.GenericAPIView):
