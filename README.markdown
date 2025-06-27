@@ -84,17 +84,22 @@ este repositorio incluye un Backend Djnago y una aplicación Android Kotlin de F
 
 ## Maquetas de la Aplicación
 
-![Retos](assets/retos.jpeg)  
+![Retos](assets/retos.jpeg) 
+<img src="assets/retos.jpeg" alt="Pantalla principal" width="300"/>
 *Descripción: Pantalla de los retos disponibles.*
 
-![Publicar](assets/publicar.jpeg)  
+![Publicar](assets/publicar.jpeg)
+<img src="assets/publicar.jpeg" alt="Pantalla principal" width="300"/>
 *Descripción: Publicar un reto.*
 
-![Buscar](assets/buscar.jpeg)  
+![Buscar](assets/buscar.jpeg)
+<img src="assets/buscar.jpeg" alt="Pantalla principal" width="300"/>
 *Descripción: Buscar usuarios.*
 
-![Feed](assets/feed.jpeg)  
+![Feed](assets/feed.jpeg)
+<img src="assets/feed.jpeg" alt="Pantalla principal" width="300"/>
 *Descripción: Feed de la gente que sigues.*
 
-![Perfil](assets/perfil.jpeg)  
+![Perfil](assets/perfil.jpeg)
+<img src="assets/perfil.jpeg" alt="Pantalla principal" width="300"/>
 *Descripción: Pantalla del perfil.*
