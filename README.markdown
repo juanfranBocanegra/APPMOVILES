@@ -84,14 +84,17 @@ este repositorio incluye un Backend Djnago y una aplicación Android Kotlin de F
 
 ## Maquetas de la Aplicación
 
-[Incluye aquí las maquetas de la app. Sube las imágenes al repositorio y reemplaza los marcadores de posición con las rutas correctas. Ejemplo:]
+![Retos](assets/retos.jpeg)  
+*Descripción: Pantalla de los retos disponibles.*
 
-![Maqueta 1](ruta/a/maqueta1.png)  
-*Descripción: [Breve descripción de lo que muestra la maqueta 1].*
+![Publicar](assets/publicar.jpeg)  
+*Descripción: Publicar un reto.*
 
-![Maqueta 2](ruta/a/maqueta2.png)  
-*Descripción: [Breve descripción de lo que muestra la maqueta 2].*
+![Buscar](assets/buscar.jpeg)  
+*Descripción: Buscar usuarios.*
 
-## Contacto
+![Feed](assets/feed.jpeg)  
+*Descripción: Feed de la gente que sigues.*
 
-[Proporciona información de contacto o enlaces. Ejemplo: "Para preguntas o sugerencias, contacta a [tu nombre] en [correo o GitHub]."]
+![Perfil](assets/perfil.jpeg)  
+*Descripción: Pantalla del perfil.*
