@@ -1,31 +1,45 @@
-# Dolt - [Nombre de tu Red Social]
+# Dolt - Red Social de Retos
 
 ## Descripción
 
-[Describe el propósito y las características principales de tu red social. Explica qué la hace única, qué problemas resuelve o qué tipo de usuarios la utilizarán. Ejemplo: "Dolt es una red social que conecta a [tipo de usuarios] para [propósito principal], con funciones como [lista de funciones clave]."]
+Dolt es un proyecto personal que consiste en una red social de Retos, tiene inspiración en BeReal y Twitter, 
+este repositorio incluye un Backend Djnago y una aplicación Android Kotlin de Frontend.
 
 ## Características
 
-- [Función 1: describe brevemente]
-- [Función 2: describe brevemente]
-- [Función 3: describe brevemente]
-- [Añade más funciones según sea necesario]
-
+- Publica y responde a retos diarios
+- Vota y opina sobre los retos de los demás
+- Sigue a tus amigos y echa un vistazo a sus publiaciones
+- Más adelante se añadirían más funciones como un ranking global o la publicación de imagenes
+  
 ## Tecnologías
 
-- **Frontend**: Kotlin [especifica la versión o frameworks, ej. Jetpack Compose].
-- **Backend**: Django [especifica la versión] con [base de datos, ej. PostgreSQL, SQLite].
-- [Otras tecnologías o herramientas relevantes, ej. APIs externas, bibliotecas, etc.]
+### Frontend (Android)
 
-## Requisitos
+- **Lenguaje:** Kotlin `2.0.21`
+- **Frameworks:** Jetpack (ViewModel, LiveData, Navigation)
+- **UI:** Material Components, ConstraintLayout, SwipeRefreshLayout
+- **Persistencia local:** Room `2.7.1`  
+- **Binding:** DataBinding, ViewBinding
+- **Redes:** Retrofit + OkHttp + Gson
+- **Firebase:**
+  - Firebase Auth
+  - Firebase Cloud Messaging (FCM)
+  - Firebase Analytics
+- **Autenticación Google:** `credentials-play-services-auth:1.5.0`
+- **Otras libs:** Glide `4.16.0`, Timber, Google Play Services
 
-### Frontend
-- [Lista los requisitos para el frontend, ej. Android Studio, versión de Kotlin, SDK de Android, etc.]
-- [Ejemplo: Android Studio Arctic Fox o superior, Kotlin 1.9, Android API 21+]
+### Backend (Django)
 
-### Backend
-- [Lista los requisitos para el backend, ej. Python, Django, base de datos, etc.]
-- [Ejemplo: Python 3.8+, Django 4.x, PostgreSQL 13+]
+- **Framework principal:** Django `5.1.7`
+- **API REST:** Django REST Framework `3.15.2`
+- **JWT Authentication:** djangorestframework-simplejwt `5.4.0`
+- **Servidor ASGI:** Uvicorn `0.34.0`
+- **Servidor WSGI:** Gunicorn `23.0.0`
+- **Base de datos:** PostgreSQL (`psycopg2==2.9.10`)
+- **Firebase Admin SDK:** `6.7.0`
+- **Almacenamiento y Firestore:** `google-cloud-storage`, `google-cloud-firestore`
+- **Despliegue de archivos estáticos:** WhiteNoise `6.9.0`
 
 ## Instalación
 
@@ -56,7 +70,7 @@
    ```
 
 ### Frontend (Kotlin)
-1. Abre el directorio `frontend` en [Android Studio u otra herramienta].
+1. Abre el directorio `frontend` en Android Studio
 2. Sincroniza el proyecto con Gradle:
    - [Especifica cómo, ej. "Haz clic en 'Sync Project with Gradle Files' en Android Studio."]
 3. Configura la URL del backend:
@@ -77,19 +91,6 @@
 
 ![Maqueta 2](ruta/a/maqueta2.png)  
 *Descripción: [Breve descripción de lo que muestra la maqueta 2].*
-
-## Contribuciones
-
-[Describe cómo otros pueden contribuir al proyecto. Ejemplo:]
-1. Haz un fork del repositorio.
-2. Crea una rama (`git checkout -b feature/nueva-funcionalidad`).
-3. Realiza tus cambios y haz commit (`git commit -m "Añade nueva funcionalidad"`).
-4. Envía un push a la rama (`git push origin feature/nueva-funcionalidad`).
-5. Abre un Pull Request.
-
-## Licencia
-
-[Especifica la licencia de tu proyecto, ej. MIT, Apache 2.0, etc. Ejemplo: "Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles."]
 
 ## Contacto
 
